@@ -6,7 +6,7 @@ import { CookieModal } from "./cookie-modal";
 
 import "./cookieConsent.css";
 
-import { CookieConsentConfig, Props } from "./index.d";
+import { CookieConsentConfig, Props } from "./types";
 
 const defaultConfig: Required<CookieConsentConfig> = {
   banner: {

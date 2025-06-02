@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 
-import { CookieConsentConfig } from ".";
+import { CookieConsentConfig } from "./types";
 
 const Banner: FC<{
   mergedConfig: Required<CookieConsentConfig>;

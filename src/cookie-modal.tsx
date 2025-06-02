@@ -1,6 +1,6 @@
 import React, { FC, MouseEventHandler } from "react";
 
-import { CookieConsentConfig } from ".";
+import { CookieConsentConfig } from "./types";
 
 const CookieModal: FC<{
   mergedConfig: Required<CookieConsentConfig>;

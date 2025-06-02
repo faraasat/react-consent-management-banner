@@ -4,4 +4,4 @@ export type {
   IMoreLinks,
   CookieConsentConfig,
   Props,
-} from "./src/index.d";
+} from "./src/types";
