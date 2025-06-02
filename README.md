@@ -14,7 +14,7 @@ pnpm i react-consent-management-banner
 bun add react-consent-management-banner
 ```
 
-## Demo:
+## Demo
 
 Banner
 
@@ -38,7 +38,7 @@ Preferences
 
 ```jsx
 import React from "react";
-import CookieConsent from "./components/CookieConsent"; // Adjust path accordingly
+import { CookieConsent } from "./components/CookieConsent"; // Adjust path accordingly
 
 function App() {
   return (
