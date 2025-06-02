@@ -2,16 +2,6 @@
 
 A fully configurable and lightweight cookie consent banner for React applications. Supports customizable layout, button text, and preference modal with persistent storage in localStorage.
 
-## 🚀 Features
-
-- ✅ Accept all cookies or reject non-essential ones
-- ⚙️ Fully configurable preference modal
-- 📍 Banner position (top / bottom)
-- 📌 Settings button position (top-left, top-right, bottom-left, bottom-right)
-- 🧠 Smart persistence via localStorage
-- 📜 Links to Cookie Policy, Privacy Policy, and Terms
-- ✨ Lightweight and easy to style
-
 ## 📦 Installation
 
 ```bash
@@ -23,6 +13,26 @@ pnpm i react-consent-management-banner
 
 bun add react-consent-management-banner
 ```
+
+## Demo:
+
+Banner
+
+![Banner]("/github-imgs/banner.png")
+
+Preferences
+
+![preferences]("/github-imgs/preferences.png")
+
+## 🚀 Features
+
+- ✅ Accept all cookies or reject non-essential ones
+- ⚙️ Fully configurable preference modal
+- 📍 Banner position (top / bottom)
+- 📌 Settings button position (top-left, top-right, bottom-left, bottom-right)
+- 🧠 Smart persistence via localStorage
+- 📜 Links to Cookie Policy, Privacy Policy, and Terms
+- ✨ Lightweight and easy to style
 
 ## 🧑‍💻 Usage
 
@@ -102,7 +112,7 @@ type CookieConsentConfig = {
 {
   "necessary": true,
   "advertisement": false,
-  "analytical": true,
+  "analytical": true
 }
 ```
 
