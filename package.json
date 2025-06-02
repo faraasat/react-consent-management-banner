@@ -11,13 +11,14 @@
     "require": "./dist/cjs/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "style.css"
   ],
   "scripts": {
     "build": "npm run build:cjs && npm run build:esm && npm run copy-css",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
-    "copy-css": "cp ./src/*.css dist/",
+    "copy-css": "cp ./src/*.css ./style.css",
     "release": "standard-version"
   },
   "keywords": [
