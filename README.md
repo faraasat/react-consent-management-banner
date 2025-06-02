@@ -14,7 +14,7 @@ pnpm i react-consent-management-banner
 bun add react-consent-management-banner
 ```
 
-## Demo
+## ⚙️ Demo
 
 Banner
 
@@ -106,7 +106,7 @@ type CookieConsentConfig = {
 - Preferences are stored in localStorage under the key cookiePreferences.
 - A floating settings button appears after consent is given, allowing users to adjust preferences later.
 
-### 🗂 Local Storage Structure
+## 🗂 Local Storage Structure
 
 ```json
 {
