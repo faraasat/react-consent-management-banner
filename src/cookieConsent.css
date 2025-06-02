@@ -1,0 +1,215 @@
+/* COOKIE BANNER */
+.cookie-banner-wrapper {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  background-color: transparent;
+  color: var(--cookie-consent-text-color);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: animate-fade 0.4s linear 0s 1;
+  font-size: medium;
+}
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+@keyframes animate-fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.cookie-banner-wrapper.top {
+  top: 0;
+}
+
+.cookie-banner-wrapper.bottom {
+  bottom: 0;
+}
+
+.cookie-banner {
+  border-radius: 1.75rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  box-shadow: 0px 0px 2rem 0.25rem rgba(0, 0, 0, 0.15);
+  background-color: var(--cookie-consent-background-color);
+  gap: 1rem;
+  max-width: 1000px;
+  width: 97%;
+}
+
+.cookie-banner a {
+  color: var(--cookie-consent-link-color);
+  margin: 0 4px;
+  text-decoration: underline;
+}
+
+.cookie-banner > p {
+  text-align: center;
+}
+
+.cookie-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cookie-buttons button,
+.cookie-modal button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: var(--cookie-consent-button-background-color);
+  color: var(--cookie-consent-background-color);
+  border: 1px solid var(--cookie-consent-button-background-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cookie-buttons button:hover,
+.cookie-modal button:hover {
+  transform: scale(1.05);
+}
+
+.cookie-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  animation: animate-fade 0.4s linear 0s 1;
+}
+
+.cookie-modal-content {
+  position: relative;
+  background: white;
+  padding: 3rem;
+  border-radius: 1.75rem;
+  width: 98%;
+  max-width: 500px;
+  font-family: sans-serif;
+  font-size: medium;
+  max-width: 750px;
+  height: calc(100% - 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.cookie-modal__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 20px;
+  margin-right: 25px;
+  font-size: 30px;
+  cursor: pointer;
+  display: flex;
+}
+
+.cookie-modal-content h3 {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.cookie-modal-content ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+  margin: 20px 0;
+}
+
+.cookie-modal-content li {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.cookie-modal-content li > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.cookie-modal__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: auto;
+  font-size: 18px;
+}
+
+.cookie-settings-button {
+  position: fixed;
+  z-index: 999999;
+  padding: 1rem 1rem;
+  border-radius: 100%;
+  background-color: var(--cookie-consent-button-background-color);
+  color: var(--cookie-consent-background-color);
+  border: 1px solid var(--cookie-consent-button-background-color);
+  border: none;
+  cursor: pointer;
+  font-size: 30px;
+  box-sizing: border-box;
+}
+
+.cookie-settings-button > svg {
+  width: 35px;
+  height: 35px;
+  fill: var(--cookie-consent-background-color);
+}
+
+.cookie-settings-button.top-left {
+  top: 1rem;
+  left: 1rem;
+}
+
+.cookie-settings-button.top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+.cookie-settings-button.bottom-left {
+  bottom: 1rem;
+  left: 1rem;
+}
+
+.cookie-settings-button.bottom-right {
+  bottom: 1rem;
+  right: 1rem;
+}
+
+button.btn-outline {
+  color: var(--cookie-consent-button-background-color);
+  background-color: var(--cookie-consent-background-color);
+  border: 1px solid var(--cookie-consent-button-background-color);
+}

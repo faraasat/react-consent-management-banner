@@ -1,0 +1,28 @@
+{
+  "name": "react-consent-management-banner",
+  "version": "1.0.0",
+  "description": "Beautiful and Highly Customizable GDPR/ePrivacy React Consent and Cookie Management Library for React and Next.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "react",
+    "cookie",
+    "consent",
+    "gdpr",
+    "eprivacy"
+  ],
+  "author": "Farasat Ali",
+  "license": "GPL-3.0-or-later",
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
