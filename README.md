@@ -40,7 +40,7 @@ Preferences
 import React from "react";
 import { CookieConsent } from "react-consent-management-banner";
 
-import "react-consent-management-banner/style.css";
+import "react-consent-management-banner/dist/style.css";
 
 function App() {
   return (
