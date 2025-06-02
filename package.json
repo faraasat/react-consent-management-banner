@@ -18,7 +18,7 @@
     "build": "npm run build:cjs && npm run build:esm && npm run copy-css",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
-    "copy-css": "cp ./src/*.css ./style.css",
+    "copy-css": "cp ./src/*.css dist/",
     "release": "standard-version"
   },
   "keywords": [
