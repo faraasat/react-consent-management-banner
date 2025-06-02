@@ -4,7 +4,7 @@ import Cookie from "./assets/cookie";
 import { Banner } from "./banner";
 import { CookieModal } from "./cookie-modal";
 
-import "./cookieConsent.css";
+import "./style.css";
 
 import { CookieConsentConfig, Props } from "./types";
 
