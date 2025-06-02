@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.6 (2025-06-02)
+
+
+### Bug Fixes
+
+* import issue ([48b402c](https://github.com/faraasat/react-consent-management-banner/commit/48b402c15a5e077e058daa762e699549de3c80bd))
+
 ### 1.0.5 (2025-06-02)
 
 ### 1.0.4 (2025-06-02)
