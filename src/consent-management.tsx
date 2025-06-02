@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import Cookie from "./assets/cookie";
+import Cookie from "./cookie";
 import { Banner } from "./banner";
 import { CookieModal } from "./cookie-modal";
 
