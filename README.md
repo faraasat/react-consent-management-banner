@@ -38,7 +38,9 @@ Preferences
 
 ```jsx
 import React from "react";
-import { CookieConsent } from "./components/CookieConsent"; // Adjust path accordingly
+import { CookieConsent } from "react-consent-management-banner";
+
+import "react-consent-management-banner/style.css";
 
 function App() {
   return (

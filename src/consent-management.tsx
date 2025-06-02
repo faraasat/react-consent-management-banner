@@ -4,8 +4,6 @@ import Cookie from "./cookie";
 import { Banner } from "./banner";
 import { CookieModal } from "./cookie-modal";
 
-import "./style.css";
-
 import { CookieConsentConfig, Props } from "./types";
 
 const defaultConfig: Required<CookieConsentConfig> = {
