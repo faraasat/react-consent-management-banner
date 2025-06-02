@@ -18,11 +18,11 @@ bun add react-consent-management-banner
 
 Banner
 
-![Banner](/github-imgs/banner.png)
+![Banner](https://github.com/faraasat/react-consent-management-banner/blob/main/github-imgs/banner.png)
 
 Preferences
 
-![preferences](/github-imgs/preferences.png)
+![preferences](https://github.com/faraasat/react-consent-management-banner/blob/main/github-imgs/preferences.png)
 
 ## 🚀 Features
 
