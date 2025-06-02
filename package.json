@@ -1,6 +1,6 @@
 {
   "name": "react-consent-management-banner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Beautiful and Highly Customizable GDPR/ePrivacy React Consent and Cookie Management Library for React and Next.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc & tsup src/index.tsx --format cjs,esm --dts",
+    "release": "standard-version"
   },
   "keywords": [
     "react",
@@ -24,5 +25,8 @@
   },
   "devDependencies": {
     "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
