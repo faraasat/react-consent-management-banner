@@ -18,11 +18,11 @@ bun add react-consent-management-banner
 
 Banner
 
-![Banner]("/github-imgs/banner.png")
+![Banner](/github-imgs/banner.png)
 
 Preferences
 
-![preferences]("/github-imgs/preferences.png")
+![preferences](/github-imgs/preferences.png)
 
 ## 🚀 Features
 
