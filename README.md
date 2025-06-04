@@ -36,6 +36,8 @@ Preferences
 
 ## 🧑‍💻 Usage
 
+For React:
+
 ```jsx
 import React from "react";
 import { CookieConsent } from "react-consent-management-banner";
@@ -51,6 +53,57 @@ function App() {
 }
 
 export default App;
+```
+
+For Next.js (Pages Router):
+
+```jsx
+// _app.jsx|tsx
+import React from "react";
+import type { AppProps } from "next/app";
+import { CookieConsent } from "react-consent-management-banner";
+
+import "react-consent-management-banner/dist/style.css";
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <React.Fragment>
+      <Component {...pageProps} />
+
+      <CookieConsent />
+    </React.Fragment>
+  );
+}
+
+export default MyApp;
+```
+
+For Next.js (App Router):
+
+```jsx
+// layout.jsx|tsx
+import React from "react";
+import { CookieConsent } from "react-consent-management-banner";
+
+import "react-consent-management-banner/dist/style.css";
+
+function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode,
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+
+        <CookieConsent />
+      </body>
+    </html>
+  );
+}
+
+export default RootLayout;
 ```
 
 ## 🛠 Configuration Options
