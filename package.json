@@ -25,13 +25,17 @@
   },
   "keywords": [
     "react",
+    "react component",
+    "nextjs",
+    "next.js",
+    "react consent",
     "cookie",
     "consent",
     "gdpr",
     "eprivacy"
   ],
-  "author": "Farasat Ali",
-  "license": "GPL-3.0-or-later",
+  "author": "Farasat Ali <63093876+faraasat@users.noreply.github.com>",
+  "license": "MIT",
   "peerDependencies": {
     "react": "^18.0.0"
   },
