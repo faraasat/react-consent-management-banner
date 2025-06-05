@@ -36,7 +36,7 @@ Preferences
 
 ## 🧑‍💻 Usage
 
-For React:
+### For React
 
 ```jsx
 import React from "react";
@@ -55,7 +55,7 @@ function App() {
 export default App;
 ```
 
-For Next.js (Pages Router):
+### For Next.js (Pages Router)
 
 ```jsx
 // _app.jsx|tsx
@@ -78,12 +78,24 @@ function MyApp({ Component, pageProps }: AppProps) {
 export default MyApp;
 ```
 
-For Next.js (App Router):
+### For Next.js (App Router)
+
+For App Router, we have to first export it from the client component and for this make a new file with any name and do this:
+
+```jsx
+// layout.client.ts
+"use client";
+
+import { CookieConsent } from "react-consent-management-banner";
+
+export { CookieConsent };
+```
 
 ```jsx
 // layout.jsx|tsx
 import React from "react";
-import { CookieConsent } from "react-consent-management-banner";
+
+import { CookieConsent } from "layout.client.ts";
 
 import "react-consent-management-banner/dist/style.css";
 
