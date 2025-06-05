@@ -1,5 +1,5 @@
 {
-  "name": "react-consent-management-banner",
+  "name": "react-consent-management-bannerww",
   "version": "1.0.27",
   "description": "Beautiful and Highly Customizable GDPR/ePrivacy React Consent and Cookie Management Library for React and Next.js",
   "repository": "https://github.com/faraasat/react-consent-management-banner",
@@ -92,7 +92,7 @@
   "author": "Farasat Ali <63093876+faraasat@users.noreply.github.com>",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^18.0.0"
+    "react": ">=17.0.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
