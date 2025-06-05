@@ -16,11 +16,13 @@ bun add react-consent-management-banner
 
 ## ⚙️ Demo
 
-Banner
+Access Demo at: [Demo](http://react-consent-management-banner-example.vercel.app/)
+
+### Banner
 
 ![Banner](https://github.com/faraasat/react-consent-management-banner/blob/main/github-imgs/banner.png)
 
-Preferences
+### Preferences
 
 ![preferences](https://github.com/faraasat/react-consent-management-banner/blob/main/github-imgs/preferences.png)
 
