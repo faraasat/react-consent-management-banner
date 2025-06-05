@@ -1,6 +1,6 @@
 {
   "name": "react-consent-management-banner",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Beautiful and Highly Customizable GDPR/ePrivacy React Consent and Cookie Management Library for React and Next.js",
   "repository": "https://github.com/faraasat/react-consent-management-banner",
   "main": "dist/cjs/index.js",
