@@ -16,7 +16,7 @@ bun add react-consent-management-banner
 
 ## ⚙️ Demo
 
-Access Demo at: [Demo](http://react-consent-management-banner-example.vercel.app/)
+Access Demo at: [Demo](https://react-consent-management-banner.vercel.app/)
 
 ### Banner
 
