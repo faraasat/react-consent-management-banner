@@ -2,6 +2,14 @@
 
 A fully configurable and lightweight cookie consent banner for React applications. Supports customizable layout, button text, and preference modal with persistent storage in localStorage.
 
+[![NPM](https://img.shields.io/npm/v/react-consent-management-banner.svg)](https://www.npmjs.com/package/react-consent-management-banner) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![npm download][download-image]][download-url]
+
+[download-image]: https://img.shields.io/npm/dm/react-consent-management-banner.svg
+[download-url]: https://npmjs.org/package/react-consent-management-banner
+
+[![react-consent-management-banner](https://nodei.co/npm/react-consent-management-banner.png)](https://npmjs.org/package/react-consent-management-banner)
+
 ## 📦 Installation
 
 ```bash
