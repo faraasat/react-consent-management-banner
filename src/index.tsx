@@ -163,9 +163,21 @@ const defaultConfig: Required<CookieConsentConfig> = {
       },
       {
         key: "ad_storage",
-        label: "Advertisement",
+        label: "Advertisement Storage",
         description:
           "These cookies are used to deliver advertisements that are more relevant to you. They may also limit how often you see an ad and help measure the effectiveness of advertising campaigns.",
+      },
+      {
+        key: "ad_personalization",
+        label: "Advertisement Personalization",
+        description:
+          "These cookies allow the website to deliver personalized ads based on your interests, browsing behavior, or previous interactions. They help tailor advertising content to make it more relevant to you.",
+      },
+      {
+        key: "ad_user_data",
+        label: "Advertisement User Data",
+        description:
+          "These cookies enable the collection of user data for advertising purposes, such as demographics or engagement metrics. This data supports ad measurement, targeting, and optimization.",
       },
       {
         key: "analytics_storage",
@@ -205,7 +217,10 @@ const defaultConfig: Required<CookieConsentConfig> = {
   getConsentPreferences: () => {},
 };
 
-export function CookieConsent({ config = defaultConfig }: Props) {
+export function CookieConsent({
+  GA_TRACKING_ID,
+  config = defaultConfig,
+}: Props) {
   const [showBanner, setShowBanner] = React.useState(false);
   const [showPreferences, setShowPreferences] = React.useState(false);
   const [preferences, setPreferences] = React.useState<Record<string, boolean>>(
@@ -295,23 +310,41 @@ export function CookieConsent({ config = defaultConfig }: Props) {
   }, []);
 
   React.useEffect(() => {
-    let timer = null;
     setTheme();
+
+    if (!GA_TRACKING_ID) {
+      console.error("GA_TRACKING_ID is required for Google Analytics.");
+      return;
+    }
+
+    if (!window.gtag) {
+      const script = document.createElement("script");
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
+      script.async = true;
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(...args: any[]) {
+          window.dataLayer.push(args);
+        }
+        gtag("js", new Date());
+        gtag("config", GA_TRACKING_ID);
+      };
+    }
+  }, []);
+
+  React.useEffect(() => {
     const saved = localStorage.getItem("cookiePreferences");
 
     if (!saved) {
-      timer = setTimeout(() => {
-        handleSavePreferences("essential", true);
-        setShowBanner(true);
-      }, 700);
+      handleSavePreferences("essential", true);
+      setShowBanner(true);
     } else {
-      setPreferences(JSON.parse(saved));
+      const preference = JSON.parse(saved);
+      setPreferences(preference);
       setConsentGiven(true);
     }
-
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
   }, [setTheme, mergedConfig.preferences.options]);
 
   const handleSavePreferences = (

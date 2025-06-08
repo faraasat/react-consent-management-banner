@@ -55,6 +55,7 @@ export type CookieConsentConfig = {
 
 export type Props = {
   config?: Partial<CookieConsentConfig>;
+  GA_TRACKING_ID: string;
 };
 
 export interface IGetGtagAdsPropsDefault {
@@ -78,6 +79,7 @@ export type GetGtagAdsPropsT =
 declare global {
   interface Window {
     gtag?: Function;
+    dataLayer?: any;
   }
 }
 
