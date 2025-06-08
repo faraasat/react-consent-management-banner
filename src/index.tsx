@@ -305,7 +305,7 @@ export function CookieConsent({ config = defaultConfig }: Props) {
       setPreferences(JSON.parse(saved));
       setConsentGiven(true);
     }
-  }, [setTheme, mergedConfig.preferences.options]);
+  }, [setTheme, mergedConfig.preferences.options, window.gtag]);
 
   const handleSavePreferences = (
     prefType?: PreferenceType,
@@ -323,6 +323,9 @@ export function CookieConsent({ config = defaultConfig }: Props) {
       });
     } else {
       prefToSave = { ...preferences };
+      mergedConfig.preferences.options?.forEach((opt) => {
+        prefToSave[opt.key] = !!opt.alwaysEnabled;
+      });
     }
 
     if (isDefault) {
