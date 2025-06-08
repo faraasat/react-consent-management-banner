@@ -317,7 +317,7 @@ export function CookieConsent({
       return;
     }
 
-    if (!window.gtag) {
+    if (window && !window.gtag) {
       const script = document.createElement("script");
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
       script.async = true;
@@ -332,9 +332,7 @@ export function CookieConsent({
         gtag("config", GA_TRACKING_ID);
       };
     }
-  }, []);
 
-  React.useEffect(() => {
     const saved = localStorage.getItem("cookiePreferences");
 
     if (!saved) {
