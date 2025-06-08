@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.5 (2025-06-08)
+
+
+### Bug Fixes
+
+* issue `A tag read consent state before a default was set` ([4bf5b09](https://github.com/faraasat/react-consent-management-banner/commit/4bf5b099322eb862564d4f21113bbb3393e45958))
+
 ### 1.1.4 (2025-06-08)
 
 ### 1.1.3 (2025-06-08)
