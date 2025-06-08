@@ -57,7 +57,7 @@ import "react-consent-management-banner/dist/style.css";
 function App() {
   return (
     <div>
-      <CookieConsent />
+      <CookieConsent GA_TRACKING_ID="<YOUR_TRACKING_ID>" />
     </div>
   );
 }
@@ -80,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <React.Fragment>
       <Component {...pageProps} />
 
-      <CookieConsent />
+      <CookieConsent GA_TRACKING_ID="<YOUR_TRACKING_ID>" />
     </React.Fragment>
   );
 }
@@ -119,7 +119,7 @@ function RootLayout({
       <body>
         {children}
 
-        <CookieConsent />
+        <CookieConsent GA_TRACKING_ID="<YOUR_TRACKING_ID>" />
       </body>
     </html>
   );
@@ -133,7 +133,7 @@ export default RootLayout;
 You can pass a custom config prop to override defaults:
 
 ```jsx
-<CookieConsent config={customConfig} />
+<CookieConsent config={customConfig} GA_TRACKING_ID="<YOUR_TRACKING_ID>" />
 ```
 
 ## 🔧 Config object structure
@@ -178,7 +178,7 @@ type CookieConsentConfig = {
   ) => void;
   getConsentGiven?: () => void;
   getConsentPreferences?: () => void;
-}
+};
 ```
 
 ## 🧠 How It Works
@@ -193,9 +193,14 @@ type CookieConsentConfig = {
 
 ```json
 {
-  "necessary": true,
-  "advertisement": false,
-  "analytical": true
+  "ad_personalization": true,
+  "ad_storage": true,
+  "ad_user_data": true,
+  "analytics_storage": true,
+  "functionality_storage": true,
+  "necessary_storage": true,
+  "personalization_storage": true,
+  "security_storage": true
 }
 ```
 

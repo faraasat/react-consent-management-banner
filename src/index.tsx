@@ -300,20 +300,19 @@ export function CookieConsent({
 
   const updateScript = (config: any, isDefault: boolean = false) => {
     if (!window.gtag) {
+      window.dataLayer = window.dataLayer || [];
+      const gtag = (...args: any[]) => {
+        window.dataLayer.push(args);
+      };
+      window.gtag = gtag;
+
       const script = document.createElement("script");
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
       script.async = false;
       document.head.appendChild(script);
 
-      console.log(script);
-
       script.onload = () => {
         console.log("Google Tag Manager script loaded");
-        window.dataLayer = window.dataLayer || [];
-        function gtag(...args: any[]) {
-          window.dataLayer.push(args);
-        }
-        window.gtag = gtag;
         gtag("js", new Date());
         gtag("config", GA_TRACKING_ID);
         console.info(
