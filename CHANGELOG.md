@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.9 (2025-06-08)
+
+
+### Bug Fixes
+
+* gtag integration ([2516872](https://github.com/faraasat/react-consent-management-banner/commit/2516872bcc6b5af8b89c74e40e0535ce8a02e50e))
+
 ### 1.1.8 (2025-06-08)
 
 
