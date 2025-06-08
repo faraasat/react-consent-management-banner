@@ -118,6 +118,8 @@ button {
   box-sizing: border-box;
   overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
 }
 
 .cookie-modal__close {
