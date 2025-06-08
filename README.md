@@ -141,7 +141,7 @@ You can pass a custom config prop to override defaults:
 ```ts
 type CookieConsentConfig = {
   banner: {
-    className?: CSSProperties;
+    className?: React.CSSProperties;
     title?: string;
     position?: "top" | "bottom";
     button: {
@@ -159,20 +159,26 @@ type CookieConsentConfig = {
   preferences: {
     title: string;
     para?: string;
-    className?: CSSProperties;
+    className?: React.CSSProperties;
     button: { savePreferencesText?: string; goBackText?: string };
     options: Array<IPreferenceOption>;
   };
   cookieFloatingButton: {
     position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    Component: JSX.Element | JSX.Element[];
+    Component: React.JSX.Element | React.JSX.Element[] | React.ReactNode;
     show: boolean;
   };
   backgroundColor: string;
   linkColor: string;
   buttonBackgroundColor: string;
   textColor: string;
-};
+  onPreferencesChange?: (
+    preferences: Record<string, boolean>,
+    consentGiven: boolean
+  ) => void;
+  getConsentGiven?: () => void;
+  getConsentPreferences?: () => void;
+}
 ```
 
 ## 🧠 How It Works

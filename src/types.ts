@@ -1,4 +1,4 @@
-import { CSSProperties, JSX } from "react";
+import React from "react";
 
 export interface IPreferenceOption {
   key: string;
@@ -14,7 +14,7 @@ export interface IMoreLinks {
 
 export type CookieConsentConfig = {
   banner: {
-    className?: CSSProperties;
+    className?: React.CSSProperties;
     title?: string;
     position?: "top" | "bottom";
     button: {
@@ -32,21 +32,53 @@ export type CookieConsentConfig = {
   preferences: {
     title: string;
     para?: string;
-    className?: CSSProperties;
+    className?: React.CSSProperties;
     button: { savePreferencesText?: string; goBackText?: string };
     options: Array<IPreferenceOption>;
   };
   cookieFloatingButton: {
     position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    Component: JSX.Element | JSX.Element[];
+    Component: React.JSX.Element | React.JSX.Element[] | React.ReactNode;
     show: boolean;
   };
   backgroundColor: string;
   linkColor: string;
   buttonBackgroundColor: string;
   textColor: string;
+  onPreferencesChange?: (
+    preferences: Record<string, boolean>,
+    consentGiven: boolean
+  ) => void;
+  getConsentGiven?: () => void;
+  getConsentPreferences?: () => void;
 };
 
 export type Props = {
   config?: Partial<CookieConsentConfig>;
 };
+
+export interface IGetGtagAdsPropsDefault {
+  isDefault: true;
+}
+
+export interface IGetGtagAdsPropsNonDefault {
+  ad_storage: boolean;
+  analytics_storage: boolean;
+  functionality_storage: boolean;
+  personalization_storage: boolean;
+  security_storage: boolean;
+  necessary_storage: boolean;
+}
+
+export type GetGtagAdsPropsT =
+  | IGetGtagAdsPropsDefault
+  | (Partial<IGetGtagAdsPropsDefault> & IGetGtagAdsPropsNonDefault)
+  | Record<string, boolean>;
+
+declare global {
+  interface Window {
+    gtag?: Function;
+  }
+}
+
+export type PreferenceType = "all" | "essential";
