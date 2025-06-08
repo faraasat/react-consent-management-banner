@@ -257,18 +257,18 @@ export function CookieConsent({
     mergedConfig.textColor,
   ]);
 
-  const getGtag = () => {
-    if (window) {
-      if (!window?.gtag || typeof window?.gtag != "function") {
-        console.error(
-          "Google Tag Manager is not initialized. Please ensure GTM is set up correctly."
-        );
-        return null;
-      }
+  // const getGtag = () => {
+  //   if (window) {
+  //     if (!window?.gtag || typeof window?.gtag != "function") {
+  //       console.error(
+  //         "Google Tag Manager is not initialized. Please ensure GTM is set up correctly."
+  //       );
+  //       return null;
+  //     }
 
-      return window.gtag;
-    }
-  };
+  //     return window.gtag;
+  //   }
+  // };
 
   const getGtagAds = (props: GetGtagAdsPropsT) => {
     if (props.isDefault) {
@@ -298,16 +298,39 @@ export function CookieConsent({
     };
   };
 
-  const saveDefaultGtagPreferences = React.useCallback(() => {
-    const gtag = getGtag();
-    const pref = getGtagAds({ isDefault: true });
+  const updateScript = (config: any, isDefault: boolean = false) => {
+    if (!window.gtag) {
+      const script = document.createElement("script");
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
+      script.async = false;
+      document.head.appendChild(script);
 
-    if (!gtag) return;
+      console.log(script);
 
-    console.info(`Selected default preferences:`, pref);
-
-    gtag("consent", "default", pref);
-  }, []);
+      script.onload = () => {
+        console.log("Google Tag Manager script loaded");
+        window.dataLayer = window.dataLayer || [];
+        function gtag(...args: any[]) {
+          window.dataLayer.push(args);
+        }
+        window.gtag = gtag;
+        gtag("js", new Date());
+        gtag("config", GA_TRACKING_ID);
+        console.info(
+          `Selected ${isDefault ? "default" : "custom"} preferences:`,
+          config
+        );
+        gtag("consent", isDefault ? "default" : "update", config);
+      };
+    } else {
+      const gtag = window?.gtag;
+      console.info(
+        `Selected ${isDefault ? "default" : "custom"} preferences:`,
+        config
+      );
+      gtag("consent", isDefault ? "default" : "update", config);
+    }
+  };
 
   React.useEffect(() => {
     setTheme();
@@ -315,22 +338,6 @@ export function CookieConsent({
     if (!GA_TRACKING_ID) {
       console.error("GA_TRACKING_ID is required for Google Analytics.");
       return;
-    }
-
-    if (window && !window.gtag) {
-      const script = document.createElement("script");
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
-      script.async = true;
-      document.head.appendChild(script);
-
-      script.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(...args: any[]) {
-          window.dataLayer.push(args);
-        }
-        gtag("js", new Date());
-        gtag("config", GA_TRACKING_ID);
-      };
     }
 
     const saved = localStorage.getItem("cookiePreferences");
@@ -369,17 +376,12 @@ export function CookieConsent({
     }
 
     if (isDefault) {
-      saveDefaultGtagPreferences();
+      updateScript(prefToSave, true);
       setPreferences(prefToSave);
       config.onPreferencesChange(prefToSave, false);
     } else {
-      const gtag = getGtag();
       const pref = getGtagAds(prefToSave);
-
-      console.info(`Selected custom preferences:`, pref);
-
-      if (!gtag) return;
-      gtag("consent", "update", pref);
+      updateScript(prefToSave);
       localStorage.setItem("cookiePreferences", JSON.stringify(prefToSave));
       setShowPreferences(false);
       setShowBanner(false);
