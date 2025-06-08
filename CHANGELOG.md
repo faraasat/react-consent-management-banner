@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.2 (2025-06-08)
+
+
+### Bug Fixes
+
+* `window not defined` issue ([a6514db](https://github.com/faraasat/react-consent-management-banner/commit/a6514db83f07b938b8b5ad97a1f684daf5086f40))
+
 ### 1.1.1 (2025-06-08)
 
 
