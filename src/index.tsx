@@ -242,7 +242,7 @@ export function CookieConsent({ config = defaultConfig }: Props) {
     mergedConfig.textColor,
   ]);
 
-  const getGtag = React.useCallback(() => {
+  const getGtag = () => {
     if (window) {
       if (!window?.gtag || typeof window?.gtag != "function") {
         console.error(
@@ -253,7 +253,7 @@ export function CookieConsent({ config = defaultConfig }: Props) {
 
       return window.gtag;
     }
-  }, []);
+  };
 
   const getGtagAds = (props: GetGtagAdsPropsT) => {
     if (props.isDefault) {
@@ -285,7 +285,6 @@ export function CookieConsent({ config = defaultConfig }: Props) {
 
   const saveDefaultGtagPreferences = React.useCallback(() => {
     const gtag = getGtag();
-
     const pref = getGtagAds({ isDefault: true });
 
     console.info(`Selected default preferences:`, pref);
@@ -298,14 +297,15 @@ export function CookieConsent({ config = defaultConfig }: Props) {
   React.useEffect(() => {
     setTheme();
     const saved = localStorage.getItem("cookiePreferences");
+
     if (!saved) {
-      handleSavePreferences("essential");
+      handleSavePreferences("essential", true);
       setShowBanner(true);
     } else {
       setPreferences(JSON.parse(saved));
       setConsentGiven(true);
     }
-  }, [setTheme, mergedConfig.preferences.options, window.gtag]);
+  }, [setTheme, mergedConfig.preferences.options]);
 
   const handleSavePreferences = (
     prefType?: PreferenceType,
