@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.1.0 (2025-06-08)
+
+
+### Features
+
+* add Google Consent Mode integration ([ede93b0](https://github.com/faraasat/react-consent-management-banner/commit/ede93b06f06fd1414bde7fb64e83bd4c7d48b490))
+
 ### 1.0.36 (2025-06-07)
 
 ### 1.0.35 (2025-06-05)
