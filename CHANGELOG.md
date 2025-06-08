@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.1 (2025-06-08)
+
+
+### Bug Fixes
+
+* issue in `handleSavePreferences` not saving essentials on custom preference ([e9b7f6a](https://github.com/faraasat/react-consent-management-banner/commit/e9b7f6a902a8891e007f1d532141df3287051fdf))
+
 ## 1.1.0 (2025-06-08)
 
 
