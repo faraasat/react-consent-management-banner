@@ -287,24 +287,31 @@ export function CookieConsent({ config = defaultConfig }: Props) {
     const gtag = getGtag();
     const pref = getGtagAds({ isDefault: true });
 
-    console.info(`Selected default preferences:`, pref);
-
     if (!gtag) return;
+
+    console.info(`Selected default preferences:`, pref);
 
     gtag("consent", "default", pref);
   }, []);
 
   React.useEffect(() => {
+    let timer = null;
     setTheme();
     const saved = localStorage.getItem("cookiePreferences");
 
     if (!saved) {
-      handleSavePreferences("essential", true);
-      setShowBanner(true);
+      timer = setTimeout(() => {
+        handleSavePreferences("essential", true);
+        setShowBanner(true);
+      }, 700);
     } else {
       setPreferences(JSON.parse(saved));
       setConsentGiven(true);
     }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [setTheme, mergedConfig.preferences.options]);
 
   const handleSavePreferences = (
@@ -323,9 +330,11 @@ export function CookieConsent({ config = defaultConfig }: Props) {
       });
     } else {
       prefToSave = { ...preferences };
-      mergedConfig.preferences.options?.forEach((opt) => {
-        prefToSave[opt.key] = !!opt.alwaysEnabled;
-      });
+      mergedConfig.preferences.options
+        ?.filter((opt) => opt?.alwaysEnabled)
+        .forEach((opt) => {
+          prefToSave[opt.key] = !!opt.alwaysEnabled;
+        });
     }
 
     if (isDefault) {
@@ -336,7 +345,7 @@ export function CookieConsent({ config = defaultConfig }: Props) {
       const gtag = getGtag();
       const pref = getGtagAds(prefToSave);
 
-      console.info(`Selected Custom preferences:`, pref);
+      console.info(`Selected custom preferences:`, pref);
 
       if (!gtag) return;
       gtag("consent", "update", pref);
