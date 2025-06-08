@@ -1,6 +1,6 @@
 # 🍪 Advanced Cookie Consent Banner
 
-A fully configurable and lightweight cookie consent banner for React applications. Supports customizable layout, button text, and preference modal with persistent storage in localStorage.
+A fully configurable and lightweight cookie consent banner for React applications. Supports customizable layout, button text, and preference modal with persistent storage in localStorage. Full integration with GTag, Google Analytics and Adsense.
 
 [![NPM](https://img.shields.io/npm/v/react-consent-management-banner.svg)](https://www.npmjs.com/package/react-consent-management-banner) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![npm download][download-image]][download-url]
@@ -45,6 +45,8 @@ Access Demo at: [Demo](https://react-consent-management-banner.vercel.app/)
 - ✨ Lightweight and easy to style
 
 ## 🧑‍💻 Usage
+
+> ### $\textsf{\color{red}{NOTE: Make Sure You Remove All Manual GTag Scripts for This Library to Work Properly}}$
 
 ### For React
 

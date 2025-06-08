@@ -257,77 +257,54 @@ export function CookieConsent({
     mergedConfig.textColor,
   ]);
 
-  // const getGtag = () => {
-  //   if (window) {
-  //     if (!window?.gtag || typeof window?.gtag != "function") {
-  //       console.error(
-  //         "Google Tag Manager is not initialized. Please ensure GTM is set up correctly."
-  //       );
-  //       return null;
-  //     }
-
-  //     return window.gtag;
-  //   }
-  // };
-
   const getGtagAds = (props: GetGtagAdsPropsT) => {
     if (props.isDefault) {
-      return {
-        ad_storage: "denied",
-        analytics_storage: "denied",
-        functionality_storage: "granted",
-        personalization_storage: "denied",
-        security_storage: "granted",
-        necessary_storage: "granted",
-      };
+      return config.preferences.options.reduce((com, curr) => {
+        return {
+          ...com,
+          [curr.key]: curr.alwaysEnabled ? "granted" : "denied",
+        };
+      }, {});
     }
 
     props = props as IGetGtagAdsPropsNonDefault;
 
-    return {
-      ad_storage: props?.ad_storage ? "granted" : "denied",
-      analytics_storage: props?.analytics_storage ? "granted" : "denied",
-      functionality_storage: props?.functionality_storage
-        ? "granted"
-        : "denied",
-      personalization_storage: props?.personalization_storage
-        ? "granted"
-        : "denied",
-      security_storage: props?.security_storage ? "granted" : "denied",
-      necessary_storage: props?.necessary_storage ? "granted" : "denied",
-    };
+    return config.preferences.options.reduce((com, curr) => {
+      return {
+        ...com,
+        [curr.key]: props[curr.key] ? "granted" : "denied",
+      };
+    }, {});
   };
 
   const updateScript = (config: any, isDefault: boolean = false) => {
     if (!window.gtag) {
       window.dataLayer = window.dataLayer || [];
-      const gtag = (...args: any[]) => {
-        window.dataLayer.push(args);
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
       };
-      window.gtag = gtag;
 
-      const script = document.createElement("script");
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
-      script.async = false;
-      document.head.appendChild(script);
-
-      script.onload = () => {
-        console.log("Google Tag Manager script loaded");
-        gtag("js", new Date());
-        gtag("config", GA_TRACKING_ID);
-        console.info(
-          `Selected ${isDefault ? "default" : "custom"} preferences:`,
-          config
-        );
-        gtag("consent", isDefault ? "default" : "update", config);
-      };
-    } else {
-      const gtag = window?.gtag;
       console.info(
         `Selected ${isDefault ? "default" : "custom"} preferences:`,
         config
       );
-      gtag("consent", isDefault ? "default" : "update", config);
+      window.gtag("consent", "default", config);
+
+      const script = document.createElement("script");
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
+      script.async = true;
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        window.gtag("js", new Date());
+        window.gtag("config", GA_TRACKING_ID);
+      };
+    } else {
+      console.info(
+        `Selected ${isDefault ? "default" : "custom"} preferences:`,
+        config
+      );
+      window.gtag("consent", isDefault ? "default" : "update", config);
     }
   };
 
@@ -375,12 +352,13 @@ export function CookieConsent({
     }
 
     if (isDefault) {
-      updateScript(prefToSave, true);
+      const pref = getGtagAds({ isDefault: true });
+      updateScript(pref, true);
       setPreferences(prefToSave);
       config.onPreferencesChange(prefToSave, false);
     } else {
       const pref = getGtagAds(prefToSave);
-      updateScript(prefToSave);
+      updateScript(pref);
       localStorage.setItem("cookiePreferences", JSON.stringify(prefToSave));
       setShowPreferences(false);
       setShowBanner(false);
