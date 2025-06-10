@@ -34,6 +34,10 @@ Access Demo at: [Demo](https://react-consent-management-banner.vercel.app/)
 
 ![preferences](https://github.com/faraasat/react-consent-management-banner/blob/main/github-imgs/preferences.png)
 
+### Integrated with Google Tag Assistant
+
+![googletag assistant](https://github.com/faraasat/react-consent-management-banner/blob/main/github-imgs/googletag-assistant.png)
+
 ## 🚀 Features
 
 - ✅ Accept all cookies or reject non-essential ones
@@ -45,8 +49,6 @@ Access Demo at: [Demo](https://react-consent-management-banner.vercel.app/)
 - ✨ Lightweight and easy to style
 
 ## 🧑‍💻 Usage
-
-> ### $\textsf{\color{red}{NOTE: Make Sure You Remove All Manual GTag Scripts for This Library to Work Properly}}$
 
 ### For React
 
