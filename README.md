@@ -145,7 +145,7 @@ You can pass a custom config prop to override defaults:
 ```ts
 type CookieConsentConfig = {
   banner: {
-    className?: React.CSSProperties;
+    className?: string;
     title?: string;
     position?: "top" | "bottom";
     button: {
@@ -163,7 +163,7 @@ type CookieConsentConfig = {
   preferences: {
     title: string;
     para?: string;
-    className?: React.CSSProperties;
+    className?: string;
     button: { savePreferencesText?: string; goBackText?: string };
     options: Array<IPreferenceOption>;
   };
@@ -183,6 +183,11 @@ type CookieConsentConfig = {
   getConsentGiven?: () => void;
   getConsentPreferences?: () => void;
 };
+
+interface IMoreLinks {
+  title: string;
+  url: string;
+}
 ```
 
 ## 🧠 How It Works
@@ -214,7 +219,7 @@ Only `alwaysEnabled: true` options are locked on and non-toggle-able.
 
 ### Q: Does this banner block cookies automatically?
 
-A: No, it simply records preferences. You must use these values in your app logic to conditionally load scripts or send tracking data.
+A: No, it simply records preferences and send them to the GTag.
 
 ### Q: Is it compliant with GDPR/CCPA?
 
@@ -222,7 +227,7 @@ A: It provides necessary UX components, but legal compliance depends on how you 
 
 ### Q: Can I add custom preference categories?
 
-A: Yes! Just add entries in preferencesOptions with your desired key and label.
+A: Yes!
 
 ## 🧑‍🎓 Credits
 

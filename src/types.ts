@@ -14,7 +14,7 @@ export interface IMoreLinks {
 
 export type CookieConsentConfig = {
   banner: {
-    className?: React.CSSProperties;
+    className?: string;
     title?: string;
     position?: "top" | "bottom";
     button: {
@@ -32,7 +32,7 @@ export type CookieConsentConfig = {
   preferences: {
     title: string;
     para?: string;
-    className?: React.CSSProperties;
+    className?: string;
     button: { savePreferencesText?: string; goBackText?: string };
     options: Array<IPreferenceOption>;
   };
