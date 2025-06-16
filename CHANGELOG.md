@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.1.13 (2025-06-16)
+
+
+### Bug Fixes
+
+* className types ([2fbb2c2](https://github.com/faraasat/react-consent-management-banner/commit/2fbb2c2b2b01f0e75d5d45354622b2935212f53d))
+
 ### 1.1.12 (2025-06-10)
 
 ### 1.1.11 (2025-06-10)
