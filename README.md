@@ -63,7 +63,7 @@ Access Demo at: [Demo](https://react-consent-management-banner.vercel.app/)
 import React from "react";
 import { CookieConsent } from "react-consent-management-banner";
 
-import "react-consent-management-banner/dist/style.css";
+import "react-consent-management-banner/dist/index.css";
 
 function App() {
   return (
@@ -84,7 +84,7 @@ import React from "react";
 import type { AppProps } from "next/app";
 import { CookieConsent } from "react-consent-management-banner";
 
-import "react-consent-management-banner/dist/style.css";
+import "react-consent-management-banner/dist/index.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -118,7 +118,7 @@ import React from "react";
 
 import { CookieConsent } from "layout.client.ts";
 
-import "react-consent-management-banner/dist/style.css";
+import "react-consent-management-banner/dist/index.css";
 
 function RootLayout({
   children,

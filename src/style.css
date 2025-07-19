@@ -13,7 +13,7 @@
   font-size: medium;
 }
 
-button {
+.cookie-banner-wrapper > button {
   border: none;
   outline: none;
   cursor: pointer;

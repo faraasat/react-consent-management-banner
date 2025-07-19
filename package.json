@@ -6,14 +6,14 @@
     "type": "git",
     "url": "git+https://github.com/faraasat/react-consent-management-banner.git"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./dist/*.css": "./dist/*.css"
   },
@@ -21,9 +21,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run build:cjs && npm run build:esm && npm run copy-css",
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
+    "build": "tsup",
     "copy-css": "cp ./src/*.css dist/",
     "release": "standard-version"
   },
@@ -99,8 +97,10 @@
     "react": ">=17.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "standard-version": "^9.5.0"
+    "@types/node": "^24.0.15",
+    "standard-version": "^9.5.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"

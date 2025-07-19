@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { CookieConsent } from "./layout.client";
 
-import "react-consent-management-banner/dist/style.css";
+import "react-consent-management-banner/dist/index.css";
 
 import "./globals.css";
 import Script from "next/script";
