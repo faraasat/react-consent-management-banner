@@ -1,9 +1,16 @@
 # 🍪 Advanced Cookie Consent Banner
 
-A fully configurable and lightweight cookie consent banner for React applications. Supports customizable layout, button text, and preference modal with persistent storage in localStorage. Full integration with GTag, Google Analytics and Adsense.
+A fully configurable and lightweight cookie consent banner for React applications. Supports customizable layout, button text, and preference modal with persistent storage in localStorage — full integration with GTag, Google Analytics, and AdSense.
 
-[![NPM](https://img.shields.io/npm/v/react-consent-management-banner.svg)](https://www.npmjs.com/package/react-consent-management-banner) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![npm download][download-image]][download-url]
+![npm version](https://img.shields.io/npm/v/react-consent-management-banner.svg)
+![package size minified](https://img.shields.io/bundlephobia/min/react-consent-management-banner?style=plastic)
+[![jsDeliver](https://data.jsdelivr.com/v1/package/npm/react-consent-management-banner/badge)](https://www.jsdelivr.com/package/npm/react-consent-management-banner)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+![total downloads](https://img.shields.io/npm/dt/react-consent-management-banner.svg)
+![total downloads per year](https://img.shields.io/npm/dy/react-consent-management-banner.svg)
+![total downloads per week](https://img.shields.io/npm/dw/react-consent-management-banner.svg)
+![total downloads per month](https://img.shields.io/npm/dm/react-consent-management-banner.svg)
 
 [download-image]: https://img.shields.io/npm/dm/react-consent-management-banner.svg
 [download-url]: https://npmjs.org/package/react-consent-management-banner
