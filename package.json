@@ -12,8 +12,7 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./dist/*.css": "./dist/*.css"
   },
@@ -21,8 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "copy-css": "cp ./src/*.css dist/",
+    "build": "tsup && rm -rf dist/*.d.mts",
     "release": "standard-version"
   },
   "keywords": [
