@@ -11,7 +11,7 @@
   "dependencies": {
     "next": "15.3.3",
     "react": "^19.0.0",
-    "react-consent-management-banner": "^1.1.15",
+    "react-consent-management-banner": "^1.1.18",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
