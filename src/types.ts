@@ -38,7 +38,7 @@ export type CookieConsentConfig = {
   };
   cookieFloatingButton: {
     position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    Component: React.JSX.Element | React.JSX.Element[] | React.ReactNode;
+    Component: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     show: boolean;
   };
   backgroundColor: string;
@@ -49,12 +49,25 @@ export type CookieConsentConfig = {
     preferences: Record<string, boolean>,
     consentGiven: boolean
   ) => void;
-  getConsentGiven?: () => void;
-  getConsentPreferences?: () => void;
+  getConsentGiven?: () => boolean;
+  getConsentPreferences?: () => Record<string, boolean>;
+};
+
+/**
+ * A caller-supplied config. Every level is optional: the component deep-merges
+ * it onto the defaults, so `{ banner: { title } }` keeps the default buttons
+ * and links rather than replacing the whole `banner` object.
+ */
+export type DeepPartialConfig = {
+  [K in keyof CookieConsentConfig]?: CookieConsentConfig[K] extends object
+    ? CookieConsentConfig[K] extends Array<unknown>
+      ? CookieConsentConfig[K]
+      : Partial<CookieConsentConfig[K]>
+    : CookieConsentConfig[K];
 };
 
 export type Props = {
-  config?: Partial<CookieConsentConfig>;
+  config?: DeepPartialConfig;
   GA_TRACKING_ID: string;
 };
 

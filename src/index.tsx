@@ -6,9 +6,40 @@ import {
   CookieConsentConfig,
   GetGtagAdsPropsT,
   Props,
-  IGetGtagAdsPropsNonDefault,
+  DeepPartialConfig,
   PreferenceType,
 } from "./types";
+
+/**
+ * Merges a caller config onto the defaults one level deep.
+ *
+ * A plain `{ ...defaults, ...config }` replaced whole sections: passing
+ * `{ banner: { title } }` dropped `banner.button` and `banner.links`, and the
+ * component then crashed reading `button.acceptAlText`.
+ */
+const mergeConfig = (
+  defaults: Required<CookieConsentConfig>,
+  incoming?: DeepPartialConfig
+): Required<CookieConsentConfig> => {
+  if (!incoming) return defaults;
+
+  const out = { ...defaults } as Record<string, unknown>;
+
+  for (const [key, value] of Object.entries(incoming)) {
+    if (value === undefined) continue;
+
+    const base = (defaults as Record<string, unknown>)[key];
+    const isPlainObject = (v: unknown) =>
+      typeof v === "object" && v !== null && !Array.isArray(v);
+
+    out[key] =
+      isPlainObject(base) && isPlainObject(value)
+        ? { ...(base as object), ...(value as object) }
+        : value;
+  }
+
+  return out as Required<CookieConsentConfig>;
+};
 
 const Banner: React.FC<{
   mergedConfig: Required<CookieConsentConfig>;
@@ -69,7 +100,7 @@ const Banner: React.FC<{
 const CookieModal: React.FC<{
   mergedConfig: Required<CookieConsentConfig>;
   togglePreference: (key: string) => void;
-  handleSavePreferences: (prefType: PreferenceType) => void;
+  handleSavePreferences: (prefType?: PreferenceType) => void;
   handleClose: React.MouseEventHandler<HTMLButtonElement>;
   preferences: Record<string, boolean>;
 }> = ({
@@ -109,12 +140,25 @@ const CookieModal: React.FC<{
           <button className="btn-outline" onClick={handleClose}>
             {button?.goBackText}
           </button>
-          <button onClick={handleSavePreferences}>
+          <button onClick={() => handleSavePreferences()}>
             {button?.savePreferencesText}
           </button>
         </div>
       </div>
     </div>
+  );
+};
+
+/**
+ * Dumping every visitor's consent choices to the console is noise in
+ * production (and a poor look for a privacy component), so keep it to dev.
+ */
+const logPreferences = (isDefault: boolean, resolved: unknown) => {
+  if (typeof process !== "undefined" && process.env?.NODE_ENV === "production")
+    return;
+  console.info(
+    `Selected ${isDefault ? "default" : "custom"} preferences:`,
+    resolved
   );
 };
 
@@ -215,8 +259,8 @@ const defaultConfig: Required<CookieConsentConfig> = {
   buttonBackgroundColor: "#0073e6",
   textColor: "#000",
   onPreferencesChange: () => {},
-  getConsentGiven: () => {},
-  getConsentPreferences: () => {},
+  getConsentGiven: () => false,
+  getConsentPreferences: () => ({}),
 };
 
 export function CookieConsent({
@@ -229,10 +273,10 @@ export function CookieConsent({
     {}
   );
   const [consentGiven, setConsentGiven] = React.useState(false);
-  const mergedConfig: Required<CookieConsentConfig> = {
-    ...defaultConfig,
-    ...config,
-  };
+  const mergedConfig: Required<CookieConsentConfig> = mergeConfig(
+    defaultConfig,
+    config
+  );
 
   const setTheme = React.useCallback(() => {
     const root = document.documentElement;
@@ -261,7 +305,7 @@ export function CookieConsent({
 
   const getGtagAds = (props: GetGtagAdsPropsT) => {
     if (props.isDefault) {
-      return config.preferences.options.reduce((com, curr) => {
+      return mergedConfig.preferences.options.reduce((com, curr) => {
         return {
           ...com,
           [curr.key]: curr.alwaysEnabled ? "granted" : "denied",
@@ -269,12 +313,12 @@ export function CookieConsent({
       }, {});
     }
 
-    props = props as IGetGtagAdsPropsNonDefault;
+    const given = props as Record<string, boolean>;
 
-    return config.preferences.options.reduce((com, curr) => {
+    return mergedConfig.preferences.options.reduce((com, curr) => {
       return {
         ...com,
-        [curr.key]: props[curr.key] ? "granted" : "denied",
+        [curr.key]: given[curr.key] ? "granted" : "denied",
       };
     }, {});
   };
@@ -286,10 +330,7 @@ export function CookieConsent({
         window.dataLayer.push(arguments);
       };
 
-      console.info(
-        `Selected ${isDefault ? "default" : "custom"} preferences:`,
-        config
-      );
+      logPreferences(isDefault, config);
       window.gtag("consent", "default", config);
 
       const script = document.createElement("script");
@@ -298,15 +339,12 @@ export function CookieConsent({
       document.head.appendChild(script);
 
       script.onload = () => {
-        window.gtag("js", new Date());
-        window.gtag("config", GA_TRACKING_ID);
+        window.gtag?.("js", new Date());
+        window.gtag?.("config", GA_TRACKING_ID);
       };
     } else {
-      console.info(
-        `Selected ${isDefault ? "default" : "custom"} preferences:`,
-        config
-      );
-      window.gtag("consent", isDefault ? "default" : "update", config);
+      logPreferences(isDefault, config);
+      window.gtag?.("consent", isDefault ? "default" : "update", config);
     }
   };
 
@@ -357,7 +395,7 @@ export function CookieConsent({
       const pref = getGtagAds({ isDefault: true });
       updateScript(pref, true);
       setPreferences(prefToSave);
-      config.onPreferencesChange(prefToSave, false);
+      mergedConfig.onPreferencesChange?.(prefToSave, false);
     } else {
       const pref = getGtagAds(prefToSave);
       updateScript(pref);
@@ -366,7 +404,7 @@ export function CookieConsent({
       setShowBanner(false);
       setConsentGiven(true);
       setPreferences(prefToSave);
-      config.onPreferencesChange(prefToSave, true);
+      mergedConfig.onPreferencesChange?.(prefToSave, true);
     }
   };
 
@@ -374,13 +412,13 @@ export function CookieConsent({
     setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  config.getConsentGiven = React.useCallback(() => {
-    return consentGiven;
-  }, [consentGiven]);
-
-  config.getConsentPreferences = React.useCallback(() => {
-    return preferences;
-  }, [preferences]);
+  // The caller reads these back through the object it handed in. Assigning in
+  // an effect (rather than during render) keeps render side-effect free.
+  React.useEffect(() => {
+    if (!config) return;
+    config.getConsentGiven = () => consentGiven;
+    config.getConsentPreferences = () => preferences;
+  }, [config, consentGiven, preferences]);
 
   return (
     <>

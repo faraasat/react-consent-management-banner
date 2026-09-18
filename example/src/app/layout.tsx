@@ -1,35 +1,28 @@
 import type { Metadata } from "next";
-
-import { CookieConsent } from "./layout.client";
-
-import "react-consent-management-banner/dist/index.css";
-
+import { Analytics } from "@/components/analytics";
+import "react-consent-management-banner/style.css";
 import "./globals.css";
-import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Example for react-consent-management-banner",
-  description: "Example for react-consent-management-banner",
+  title: "react-consent-management-banner — live demo",
+  description:
+    "GDPR / ePrivacy cookie consent for React, wired into Google Consent Mode v2.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         {children}
-
-        <Script
-          id="gg-sc"
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env
-            .NEXT_PUBLIC_GOOGLE_TAG!}`}
-          async
-        ></Script>
-
-        <CookieConsent GA_TRACKING_ID={process.env.NEXT_PUBLIC_GOOGLE_TAG!} />
+        {/*
+          Only Aptabase is mounted here. Google Analytics is deliberately left
+          to CookieConsent itself, which loads gtag and sets Consent Mode v2
+          according to the visitor's choice — that is the whole point of the
+          package, so the demo must not load GA behind its back.
+        */}
+        <Analytics packageName="react-consent-management-banner" />
       </body>
     </html>
   );
