@@ -17,12 +17,19 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         {children}
         {/*
-          Only Aptabase is mounted here. Google Analytics is deliberately left
-          to CookieConsent itself, which loads gtag and sets Consent Mode v2
-          according to the visitor's choice — that is the whole point of the
-          package, so the demo must not load GA behind its back.
+          Aptabase only. Google Analytics is deliberately left to CookieConsent
+          itself, which injects gtag and sets Consent Mode v2 according to the
+          visitor's choice — that is the whole point of the package, so the
+          demo must not load GA behind its back.
+
+          This previously mounted <Analytics> with GA enabled, which loaded
+          gtag on page load regardless of consent: precisely the behaviour this
+          package exists to prevent.
         */}
-        <Analytics packageName="react-consent-management-banner" />
+        <Analytics
+          packageName="react-consent-management-banner"
+          googleAnalytics={false}
+        />
       </body>
     </html>
   );

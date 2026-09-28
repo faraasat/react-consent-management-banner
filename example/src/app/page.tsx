@@ -7,7 +7,9 @@ import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
 import { track } from "@/components/analytics";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-XXXXXXXXXX";
+// No placeholder fallback: a bogus id would silently send the demo's consent
+// signals to a property that does not exist. Missing config should be visible.
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? null;
 
 const POSITIONS: BannerPosition[] = [
   "bottom",
