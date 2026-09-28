@@ -1,217 +1,389 @@
-/* COOKIE BANNER */
-.cookie-banner-wrapper {
-  width: 100%;
-  position: fixed;
-  left: 0;
-  background-color: transparent;
-  color: var(--cookie-consent-text-color);
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: animate-fade 0.4s linear 0s 1;
-  font-size: medium;
+/*
+ * react-consent-management-banner
+ *
+ * Theming is driven by the four public custom properties the component sets on
+ * :root (--cookie-consent-*), with everything else derived from them so a
+ * caller only has to set what they care about.
+ */
+
+:root {
+  --cookie-consent-background-color: #fff;
+  --cookie-consent-text-color: #000;
+  --cookie-consent-link-color: #6ac3ff;
+  --cookie-consent-button-background-color: #0073e6;
 }
 
-.cookie-banner-wrapper > button {
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
+.ccb-wrapper,
+.ccb-modal,
+.ccb-fab {
+  --ccb-bg: var(--cookie-consent-background-color, #fff);
+  --ccb-fg: var(--cookie-consent-text-color, #000);
+  --ccb-link: var(--cookie-consent-link-color, #6ac3ff);
+  --ccb-accent: var(--cookie-consent-button-background-color, #0073e6);
+  --ccb-accent-fg: #fff;
+  --ccb-border: rgba(0, 0, 0, 0.12);
+  --ccb-muted: color-mix(in srgb, var(--ccb-fg) 65%, transparent);
+  --ccb-surface: color-mix(in srgb, var(--ccb-fg) 5%, var(--ccb-bg));
+  --ccb-radius: 14px;
+  --ccb-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
 
-@keyframes animate-fade {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.cookie-banner-wrapper.top {
-  top: 0;
-}
-
-.cookie-banner-wrapper.bottom {
-  bottom: 0;
-}
-
-.cookie-banner {
-  border-radius: 1.75rem;
-  margin: 0.5rem 0;
-  width: 100%;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: sans-serif;
-  box-shadow: 0px 0px 2rem 0.25rem rgba(0, 0, 0, 0.15);
-  background-color: var(--cookie-consent-background-color);
-  gap: 1rem;
-  max-width: 1000px;
-  width: 97%;
-}
-
-.cookie-banner a {
-  color: var(--cookie-consent-link-color);
-  margin: 0 4px;
-  text-decoration: underline;
-}
-
-.cookie-banner > p {
-  text-align: center;
-}
-
-.cookie-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
-
-.cookie-buttons button,
-.cookie-modal button {
-  padding: 0.5rem 1rem;
-  border: none;
-  background-color: var(--cookie-consent-button-background-color);
-  color: var(--cookie-consent-background-color);
-  border: 1px solid var(--cookie-consent-button-background-color);
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.cookie-buttons button:hover,
-.cookie-modal button:hover {
-  transform: scale(1.05);
-}
-
-.cookie-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999999;
-  animation: animate-fade 0.4s linear 0s 1;
-}
-
-.cookie-modal-content {
-  position: relative;
-  background: white;
-  padding: 3rem;
-  border-radius: 1.75rem;
-  width: 98%;
-  max-width: 500px;
-  font-family: sans-serif;
-  font-size: medium;
-  max-width: 750px;
-  height: calc(100% - 3rem);
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  font-family: inherit;
   box-sizing: border-box;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
 }
 
-.cookie-modal__close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin-top: 20px;
-  margin-right: 25px;
-  font-size: 30px;
+.ccb-wrapper *,
+.ccb-modal *,
+.ccb-fab * { box-sizing: border-box; }
+
+/* Dark scheme, when the host opts into `colorScheme: "auto" | "dark"`. */
+@media (prefers-color-scheme: dark) {
+  :root[data-ccb-scheme="auto"] .ccb-wrapper,
+  :root[data-ccb-scheme="auto"] .ccb-modal,
+  :root[data-ccb-scheme="auto"] .ccb-fab {
+    --ccb-border: rgba(255, 255, 255, 0.14);
+  }
+}
+
+:root[data-ccb-scheme="dark"] .ccb-wrapper,
+:root[data-ccb-scheme="dark"] .ccb-modal,
+:root[data-ccb-scheme="dark"] .ccb-fab {
+  --ccb-border: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Banner shell & positioning ─────────────────────────────────────────── */
+
+.ccb-wrapper {
+  position: fixed;
+  display: flex;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.ccb-wrapper > * { pointer-events: auto; }
+
+.ccb-wrapper--top,
+.ccb-wrapper--bottom { left: 0; right: 0; justify-content: center; }
+
+.ccb-wrapper--top    { top: 0; }
+.ccb-wrapper--bottom { bottom: 0; }
+
+.ccb-wrapper--top-left     { top: 0;    left: 0; }
+.ccb-wrapper--top-right    { top: 0;    right: 0; }
+.ccb-wrapper--bottom-left  { bottom: 0; left: 0; }
+.ccb-wrapper--bottom-right { bottom: 0; right: 0; }
+
+/* ── Banner ─────────────────────────────────────────────────────────────── */
+
+.ccb-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 20px 22px;
+  border: 1px solid var(--ccb-border);
+  border-radius: var(--ccb-radius);
+  background: var(--ccb-bg);
+  color: var(--ccb-fg);
+  box-shadow: var(--ccb-shadow);
+  animation: ccb-in 0.25s ease-out;
+}
+
+@keyframes ccb-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccb-banner, .ccb-modal__panel { animation: none; }
+}
+
+/* A full-width bar lays out horizontally once there is room. */
+.ccb-wrapper--bar .ccb-banner { max-width: 1120px; }
+
+@media (min-width: 880px) {
+  .ccb-wrapper--bar .ccb-banner {
+    flex-direction: row;
+    align-items: center;
+    /* `flex-wrap` is what lets the links row below take its own line; without
+       it every child is crushed onto one line and the copy wraps to a narrow
+       column. */
+    flex-wrap: wrap;
+    gap: 14px 22px;
+  }
+  .ccb-wrapper--bar .ccb-banner__text {
+    flex: 1 1 320px;
+    /* A flex item defaults to min-width:auto, which refuses to shrink below
+       its longest word and pushes the buttons off-balance. */
+    min-width: 0;
+    margin: 0;
+  }
+  .ccb-wrapper--bar .ccb-banner__actions { flex: 0 0 auto; }
+  .ccb-wrapper--bar .ccb-btn { flex: 0 0 auto; }
+  .ccb-wrapper--bar .ccb-banner__links {
+    flex: 1 1 100%;
+    order: 3;
+    padding-top: 12px;
+    border-top: 1px solid var(--ccb-border);
+  }
+}
+
+/* The card is a compact panel, meant for the corner positions. */
+.ccb-wrapper--card .ccb-banner { max-width: 420px; }
+
+.ccb-banner__text {
+  margin: 0;
+  font-size: 0.925rem;
+  line-height: 1.6;
+  color: var(--ccb-fg);
+}
+
+.ccb-banner__text a,
+.ccb-banner__links a {
+  color: var(--ccb-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ccb-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ccb-banner__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 0.8rem;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+.ccb-btn {
+  flex: 1 1 auto;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
-  display: flex;
+  transition: filter 0.15s ease;
 }
 
-.cookie-modal-content h3 {
-  font-size: 28px;
-  font-weight: bold;
+.ccb-btn:hover { filter: brightness(0.93); }
+
+.ccb-btn:focus-visible {
+  outline: 2px solid var(--ccb-accent);
+  outline-offset: 2px;
 }
 
-.cookie-modal-content ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 18px;
-  margin: 20px 0;
+.ccb-btn--primary {
+  background: var(--ccb-accent);
+  color: var(--ccb-accent-fg);
 }
 
-.cookie-modal-content li {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
+.ccb-btn--ghost {
+  background: transparent;
+  border-color: var(--ccb-border);
+  color: var(--ccb-fg);
 }
 
-.cookie-modal-content li > label {
+/* ── Preferences modal ──────────────────────────────────────────────────── */
+
+.ccb-modal {
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: bold;
-  font-size: 20px;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  overscroll-behavior: contain;
 }
 
-.cookie-modal__btn {
+.ccb-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 26px;
+  border-radius: var(--ccb-radius);
+  background: var(--ccb-bg);
+  color: var(--ccb-fg);
+  box-shadow: var(--ccb-shadow);
+  animation: ccb-in 0.22s ease-out;
+}
+
+.ccb-modal__title {
+  margin: 0 36px 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.ccb-modal__para {
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ccb-muted);
+}
+
+.ccb-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ccb-muted);
+  cursor: pointer;
+}
+
+.ccb-modal__close:hover { background: var(--ccb-surface); color: var(--ccb-fg); }
+
+.ccb-modal__close:focus-visible {
+  outline: 2px solid var(--ccb-accent);
+  outline-offset: 2px;
+}
+
+.ccb-modal__actions {
+  position: sticky;
+  bottom: -26px;
+  display: flex;
+  gap: 10px;
+  padding: 14px 0 0;
+  background: var(--ccb-bg);
+}
+
+/* ── Options ────────────────────────────────────────────────────────────── */
+
+.ccb-options {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ccb-option {
+  padding: 14px 16px;
+  border: 1px solid var(--ccb-border);
+  border-radius: 11px;
+  background: var(--ccb-surface);
+}
+
+.ccb-option__row {
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-content: flex-end;
-  margin-top: auto;
-  font-size: 18px;
-}
-
-.cookie-settings-button {
-  position: fixed;
-  z-index: 999999;
-  padding: 1rem 1rem;
-  border-radius: 100%;
-  background-color: var(--cookie-consent-button-background-color);
-  color: var(--cookie-consent-background-color);
-  border: 1px solid var(--cookie-consent-button-background-color);
-  border: none;
   cursor: pointer;
-  font-size: 30px;
-  box-sizing: border-box;
 }
 
-.cookie-settings-button > svg {
-  width: 35px;
-  height: 35px;
-  fill: var(--cookie-consent-background-color);
+.ccb-option__input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--ccb-accent);
+  cursor: pointer;
+  flex: 0 0 auto;
 }
 
-.cookie-settings-button.top-left {
-  top: 1rem;
-  left: 1rem;
+.ccb-option__input:disabled { cursor: default; opacity: 0.65; }
+
+.ccb-option__label {
+  font-size: 0.925rem;
+  font-weight: 600;
 }
 
-.cookie-settings-button.top-right {
-  top: 1rem;
-  right: 1rem;
+.ccb-option__badge {
+  margin-left: auto;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ccb-accent) 15%, transparent);
+  color: var(--ccb-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-.cookie-settings-button.bottom-left {
-  bottom: 1rem;
-  left: 1rem;
+.ccb-option__desc {
+  margin: 7px 0 0 27px;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  color: var(--ccb-muted);
 }
 
-.cookie-settings-button.bottom-right {
-  bottom: 1rem;
-  right: 1rem;
+/* ── Floating re-open button ────────────────────────────────────────────── */
+
+.ccb-fab {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 11px;
+  border: 1px solid var(--ccb-border);
+  border-radius: 50%;
+  background: var(--ccb-bg);
+  color: var(--ccb-fg);
+  box-shadow: var(--ccb-shadow);
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
 
-button.btn-outline {
-  color: var(--cookie-consent-button-background-color);
-  background-color: var(--cookie-consent-background-color);
-  border: 1px solid var(--cookie-consent-button-background-color);
+.ccb-fab:hover { transform: scale(1.06); }
+
+.ccb-fab:focus-visible {
+  outline: 2px solid var(--ccb-accent);
+  outline-offset: 2px;
+}
+
+.ccb-fab svg { width: 100%; height: 100%; }
+
+.ccb-fab--top-left     { top: 18px;    left: 18px; }
+.ccb-fab--top-right    { top: 18px;    right: 18px; }
+.ccb-fab--bottom-left  { bottom: 18px; left: 18px; }
+.ccb-fab--bottom-right { bottom: 18px; right: 18px; }
+
+/* ── Small screens ──────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .ccb-wrapper {
+    inset: auto 0 0 0;
+    padding: 0;
+  }
+
+  /* Every position collapses to a bottom sheet on a phone — corner cards are
+     unusable at this width. */
+  .ccb-wrapper--card .ccb-banner,
+  .ccb-banner {
+    max-width: none;
+    border-radius: var(--ccb-radius) var(--ccb-radius) 0 0;
+    border-bottom: none;
+    padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+  }
+
+  .ccb-banner__actions { flex-direction: column; }
+  .ccb-btn { width: 100%; }
+
+  .ccb-modal { padding: 0; align-items: flex-end; }
+
+  .ccb-modal__panel {
+    max-width: none;
+    max-height: 88dvh;
+    border-radius: var(--ccb-radius) var(--ccb-radius) 0 0;
+    padding: 22px 18px calc(22px + env(safe-area-inset-bottom));
+  }
+
+  .ccb-modal__actions { flex-direction: column-reverse; bottom: -22px; }
 }

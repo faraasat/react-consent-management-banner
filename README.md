@@ -66,31 +66,102 @@ export default function Layout({ children }) {
 }
 ```
 
-You do **not** need to add the `gtag` snippet yourself. The component injects it
-after setting the default consent state, so nothing is measured before the
-visitor has chosen.
+You do **not** need to add the `gtag` snippet yourself. The component sets the
+denied-by-default consent state *first*, then injects Google's script — so
+nothing is measured before the visitor has chosen.
+
+Already manage gtag yourself? Pass `GA_TRACKING_ID={null}` and the component
+will set Consent Mode state without injecting anything.
 
 > **Next.js App Router:** the package ships the `"use client"` directive.
 
 ## Consent Mode v2
 
-On a first visit, before any interaction, the component calls:
+Before any interaction:
 
 ```js
 gtag("consent", "default", {
-  necessary_storage: "granted",
-  security_storage: "granted",
-  functionality_storage: "granted",
   ad_storage: "denied",
   ad_personalization: "denied",
   ad_user_data: "denied",
   analytics_storage: "denied",
   personalization_storage: "denied",
+  functionality_storage: "granted",
+  security_storage: "granted",
 });
 ```
 
-Once a choice is saved it issues a `consent` `update` with the visitor's actual
-selection, and persists it to `localStorage` under `cookiePreferences`.
+Then a `consent` `update` once a choice is saved. Only keys Consent Mode
+actually understands are forwarded — your own custom categories are yours to
+act on via `onPreferencesChange`.
+
+## Layout & position
+
+| `layout` | `position` | Result |
+| --- | --- | --- |
+| `"bar"` (default) | `"bottom"` / `"top"` | Full-width bar, horizontal above 880px |
+| `"card"` | `"bottom-right"`, `"bottom-left"`, `"top-right"`, `"top-left"` | Compact 420px corner panel |
+
+```tsx
+<CookieConsent
+  GA_TRACKING_ID="G-XXXXXXXXXX"
+  config={{ banner: { layout: "card", position: "bottom-right" } }}
+/>
+```
+
+**On screens under 600px every layout collapses to a bottom sheet** — full
+width, top-rounded, safe-area aware, with stacked full-width buttons. Corner
+cards are unusable at phone widths.
+
+## Re-asking for consent
+
+Two mechanisms, both important for staying compliant:
+
+```tsx
+<CookieConsent
+  GA_TRACKING_ID="G-XXXXXXXXXX"
+  config={{
+    version: 2,      // bump whenever you change your categories
+    expiryDays: 365, // re-ask at least annually
+  }}
+/>
+```
+
+| Option | Default | Why |
+| --- | --- | --- |
+| `version` | `1` | A choice made against older categories does not cover new ones. Bumping it treats stored consent as absent, so visitors are asked again rather than silently carrying consent they never gave. |
+| `expiryDays` | `365` | Supervisory authorities generally expect consent to be refreshed at least annually. |
+
+Consent written by earlier releases of this package (a bare preferences map) is
+still honoured, so upgrading does not re-prompt everyone.
+
+## Storage
+
+Defaults to `localStorage`, wrapped so blocked storage (Safari private mode,
+strict privacy settings) degrades to "not persisted" rather than throwing.
+
+`localStorage` is **not shared across subdomains**. If you need one choice to
+cover `www.` and `app.`, supply a cookie-backed store:
+
+```tsx
+const cookieStorage = {
+  getItem: (k) =>
+    document.cookie.match(new RegExp(`(^| )${k}=([^;]+)`))?.[2] ?? null,
+  setItem: (k, v) => {
+    document.cookie = `${k}=${v};domain=.example.com;path=/;max-age=31536000;SameSite=Lax`;
+  },
+  removeItem: (k) => {
+    document.cookie = `${k}=;domain=.example.com;path=/;max-age=0`;
+  },
+};
+
+<CookieConsent GA_TRACKING_ID="G-XXXX" config={{ storage: cookieStorage }} />;
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `storage` | `ConsentStorage` | `localStorage` | `{ getItem, setItem, removeItem }`. |
+| `storageKey` | `string` | `"cookiePreferences"` | Key used for persistence. |
 
 ## Configuration
 
@@ -108,16 +179,19 @@ single field keeps its siblings:
 | Option | Type | Description |
 | --- | --- | --- |
 | `banner.title` | `string` | Banner copy. |
-| `banner.position` | `"top" \| "bottom"` | Where the banner sits. Default `"bottom"`. |
-| `banner.button.*` | `string` | Labels for accept / reject / preferences. |
+| `banner.position` | `BannerPosition` | See layout table above. |
+| `banner.layout` | `"bar" \| "card"` | Shape. |
+| `banner.button.*` | `string` | Accept / reject / preferences labels. |
 | `banner.links.*` | `{ title, url }` | Cookie policy, privacy policy, terms, plus `moreLinks[]`. |
-| `preferences.title` | `string` | Modal heading. |
-| `preferences.para` | `string` | Modal intro copy. |
-| `preferences.options` | `IPreferenceOption[]` | The consent categories. Replace to define your own. |
-| `cookieFloatingButton.show` | `boolean` | Show the re-open button after a choice is made. |
-| `cookieFloatingButton.position` | `"top-left" \| "top-right" \| "bottom-left" \| "bottom-right"` | Where it sits. |
+| `preferences.title` / `para` | `string` | Modal copy. |
+| `preferences.options` | `IPreferenceOption[]` | Your consent categories. |
+| `preferences.closeLabel` | `string` | Accessible label for the close button. |
+| `cookieFloatingButton.show` | `boolean` | Re-open button after a choice is made. |
+| `cookieFloatingButton.position` | corner | Where it sits. |
 | `cookieFloatingButton.Component` | `ComponentType<SVGProps>` | Your own icon. |
-| `backgroundColor` / `textColor` / `linkColor` / `buttonBackgroundColor` | `string` | Theme colours, applied as CSS custom properties. |
+| `cookieFloatingButton.label` | `string` | Its accessible name. |
+| `colorScheme` | `"auto" \| "light" \| "dark"` | `auto` follows `prefers-color-scheme`. |
+| `zIndex` | `number` | Stacking order. Default `99999`. |
 | `onPreferencesChange` | `(prefs, consentGiven) => void` | Fires on every change. |
 
 ### Reading consent back
@@ -129,7 +203,7 @@ const config = {
   },
 };
 
-<CookieConsent GA_TRACKING_ID="G-XXXXXXXXXX" config={config} />;
+<CookieConsent GA_TRACKING_ID="G-XXXX" config={config} />;
 // config.getConsentGiven() and config.getConsentPreferences() are populated
 // on the object you passed in.
 ```
@@ -140,6 +214,7 @@ const config = {
 <CookieConsent
   GA_TRACKING_ID="G-XXXXXXXXXX"
   config={{
+    version: 2, // bump, because the categories changed
     preferences: {
       title: "Your choices",
       button: { savePreferencesText: "Save", goBackText: "Cancel" },
@@ -152,14 +227,9 @@ const config = {
 />
 ```
 
-## Styling
+## Theming
 
-```tsx
-import "react-consent-management-banner/style.css";
-```
-
-Colours are exposed as CSS custom properties, so you can theme without
-overriding rules:
+Four public custom properties drive everything else:
 
 ```css
 :root {
@@ -169,6 +239,46 @@ overriding rules:
   --cookie-consent-button-background-color: #0073e6;
 }
 ```
+
+Or via config:
+
+```tsx
+<CookieConsent
+  GA_TRACKING_ID="G-XXXX"
+  config={{
+    colorScheme: "dark",
+    backgroundColor: "#131a26",
+    textColor: "#e8eef8",
+    buttonBackgroundColor: "#6aa9ff",
+  }}
+/>
+```
+
+## Accessibility
+
+- The banner is a labelled `role="region"`, so screen-reader users can find it.
+- The preferences modal is a real `role="dialog"` with `aria-modal`, labelled
+  by its heading.
+- **Focus is trapped** in the modal and restored on close; **Escape** closes it.
+- Background scrolling is locked while the modal is open.
+- Every control is a real `<button>` or `<input>`, keyboard operable, with
+  visible focus rings.
+- Honours `prefers-reduced-motion` and `prefers-color-scheme`.
+
+## Styling
+
+```tsx
+import "react-consent-management-banner/style.css";
+```
+
+| Class | Element |
+| --- | --- |
+| `.ccb-wrapper` | Positioning shell |
+| `.ccb-banner` | Banner surface |
+| `.ccb-btn--primary` / `.ccb-btn--ghost` | Buttons |
+| `.ccb-modal` / `.ccb-modal__panel` | Preferences dialog |
+| `.ccb-option` | One consent category |
+| `.ccb-fab` | Floating re-open button |
 
 ## Disclaimer
 

@@ -1,9 +1,11 @@
 import React from "react";
 
 export interface IPreferenceOption {
+  /** Consent Mode key, e.g. `analytics_storage`. */
   key: string;
   label: string;
   description: string;
+  /** Always granted and not togglable (strictly necessary cookies). */
   alwaysEnabled?: boolean;
 }
 
@@ -12,11 +14,41 @@ export interface IMoreLinks {
   url: string;
 }
 
+/** Where the banner sits. */
+export type BannerPosition =
+  | "top"
+  | "bottom"
+  | "bottom-left"
+  | "bottom-right"
+  | "top-left"
+  | "top-right";
+
+/** Banner shape: a full-width bar, or a compact floating card. */
+export type BannerLayout = "bar" | "card";
+
+export interface ConsentStorage {
+  getItem: (key: string) => string | null;
+  setItem: (key: string, value: string) => void;
+  removeItem: (key: string) => void;
+}
+
+/** What gets persisted. */
+export interface StoredConsent {
+  preferences: Record<string, boolean>;
+  /** Config version this choice was made against. */
+  version: number;
+  /** When consent was given, as an epoch milliseconds timestamp. */
+  timestamp: number;
+}
+
 export type CookieConsentConfig = {
   banner: {
     className?: string;
     title?: string;
-    position?: "top" | "bottom";
+    /** Default `"bottom"`. Corner values pair naturally with `layout: "card"`. */
+    position?: BannerPosition;
+    /** Default `"bar"`. */
+    layout?: BannerLayout;
     button: {
       acceptAlText?: string;
       rejectNonEssentialText?: string;
@@ -35,16 +67,52 @@ export type CookieConsentConfig = {
     className?: string;
     button: { savePreferencesText?: string; goBackText?: string };
     options: Array<IPreferenceOption>;
+    /** Accessible label for the close control. Default `"Close"`. */
+    closeLabel?: string;
   };
   cookieFloatingButton: {
     position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
     Component: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     show: boolean;
+    /** Accessible label. Default `"Cookie preferences"`. */
+    label?: string;
   };
+
+  // ── Theming ─────────────────────────────────────────────────────────────
   backgroundColor: string;
   linkColor: string;
   buttonBackgroundColor: string;
   textColor: string;
+  /** `"auto"` follows `prefers-color-scheme`. Default `"light"` for back-compat. */
+  colorScheme?: "auto" | "light" | "dark";
+  /** Stacking order for the banner and modal. Default `99999`. */
+  zIndex?: number;
+
+  // ── Persistence ─────────────────────────────────────────────────────────
+  /**
+   * Bump this whenever the consent categories change.
+   *
+   * A stored choice made against an older version is treated as absent, so
+   * visitors are asked again rather than silently carrying consent they never
+   * gave for the new categories. Default `1`.
+   */
+  version?: number;
+  /**
+   * Re-ask after this many days. Default `365`; supervisory authorities
+   * generally expect consent to be refreshed at least annually.
+   */
+  expiryDays?: number;
+  /** Key used for persistence. Default `"cookiePreferences"`. */
+  storageKey?: string;
+  /**
+   * Where consent is stored. Defaults to `localStorage`.
+   *
+   * Supply a cookie-backed implementation if you need the choice shared
+   * across subdomains, which `localStorage` cannot do.
+   */
+  storage?: ConsentStorage;
+
+  // ── Callbacks ───────────────────────────────────────────────────────────
   onPreferencesChange?: (
     preferences: Record<string, boolean>,
     consentGiven: boolean
@@ -68,7 +136,8 @@ export type DeepPartialConfig = {
 
 export type Props = {
   config?: DeepPartialConfig;
-  GA_TRACKING_ID: string;
+  /** GA4 measurement id. Pass `null` to manage gtag yourself. */
+  GA_TRACKING_ID: string | null;
 };
 
 export interface IGetGtagAdsPropsDefault {
@@ -91,8 +160,8 @@ export type GetGtagAdsPropsT =
 
 declare global {
   interface Window {
-    gtag?: Function;
-    dataLayer?: any;
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
   }
 }
 
