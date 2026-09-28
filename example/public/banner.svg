@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="react-consent-management-banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1c1204"/><stop offset="100%" stop-color="#2e1d06"/></linearGradient>
+    <linearGradient id="ck" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f6c343"/><stop offset="100%" stop-color="#d99a0b"/></linearGradient>
+    <linearGradient id="txt" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffe6a8"/></linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%"><stop offset="0%" stop-color="#f6c343" stop-opacity=".3"/><stop offset="100%" stop-color="#f6c343" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="320" rx="24" fill="url(#bg)"/>
+  <circle cx="1010" cy="160" r="235" fill="url(#glow)"/>
+  <g transform="translate(80 98)">
+    <circle cx="62" cy="62" r="60" fill="url(#ck)"/>
+    <circle cx="42" cy="40" r="10" fill="#7a5407"/><circle cx="82" cy="58" r="8" fill="#7a5407"/>
+    <circle cx="50" cy="84" r="9" fill="#7a5407"/><circle cx="88" cy="92" r="6" fill="#7a5407"/>
+    <circle cx="30" cy="66" r="6" fill="#7a5407"/>
+  </g>
+  <text x="222" y="150" font-family="ui-sans-serif,-apple-system,Segoe UI,Inter,Helvetica,Arial" font-size="45" font-weight="800" fill="url(#txt)">react-consent-management-banner</text>
+  <text x="222" y="196" font-family="ui-sans-serif,-apple-system,Segoe UI,Inter,Helvetica,Arial" font-size="24" fill="#e0c98f">GDPR / ePrivacy consent with Google Consent Mode v2 wired in</text>
+  <text x="222" y="238" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="19" fill="#b09a5f">npm i react-consent-management-banner</text>
+</svg>
