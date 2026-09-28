@@ -5,8 +5,8 @@ import "./style.css";
 import {
   BannerPosition,
   ConsentStorage,
-  CookieConsentConfig,
   DeepPartialConfig,
+  ResolvedConsentConfig,
   GetGtagAdsPropsT,
   PreferenceType,
   Props,
@@ -34,9 +34,9 @@ const GTAG_CONSENT_KEYS = new Set([
  * component then crashed reading `button.acceptAlText`.
  */
 const mergeConfig = (
-  defaults: Required<CookieConsentConfig>,
+  defaults: ResolvedConsentConfig,
   incoming?: DeepPartialConfig
-): Required<CookieConsentConfig> => {
+): ResolvedConsentConfig => {
   if (!incoming) return defaults;
 
   const out = { ...defaults } as Record<string, unknown>;
@@ -51,7 +51,7 @@ const mergeConfig = (
         ? { ...(base as object), ...(value as object) }
         : value;
   }
-  return out as Required<CookieConsentConfig>;
+  return out as ResolvedConsentConfig;
 };
 
 /** localStorage, but tolerant of Safari private mode and blocked storage. */
@@ -92,6 +92,47 @@ const logPreferences = (isDefault: boolean, resolved: unknown) => {
   );
 };
 
+/** Relative luminance per WCAG 2.x. */
+const luminance = (hex: string): number | null => {
+  let h = hex.trim().replace(/^#/, "");
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  if (!/^[0-9a-f]{6}$/i.test(h)) return null;
+
+  const channels = [0, 2, 4].map((i) => {
+    const v = parseInt(h.slice(i, i + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+};
+
+const contrast = (a: number, b: number) => {
+  const [hi, lo] = a > b ? [a, b] : [b, a];
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+/** WCAG AA minimum for normal-size text. */
+const AA_CONTRAST = 4.5;
+
+/**
+ * Picks a button text colour that stays readable on the chosen accent.
+ *
+ * White is kept unless it actually fails WCAG AA, rather than simply taking
+ * whichever scores higher: on a conventional mid-blue the two are within a
+ * hair of each other, and flipping to black there would look wrong for no
+ * accessibility gain. A configurable accent with hardcoded white text left
+ * any light accent below the 4.5:1 minimum with no way to correct it.
+ */
+const readableTextOn = (background: string): string => {
+  const bg = luminance(background);
+  if (bg === null) return "#ffffff";
+
+  const whiteRatio = contrast(bg, luminance("#ffffff")!);
+  if (whiteRatio >= AA_CONTRAST) return "#ffffff";
+
+  const blackRatio = contrast(bg, luminance("#000000")!);
+  return blackRatio > whiteRatio ? "#000000" : "#ffffff";
+};
+
 const CookieIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +147,7 @@ const CookieIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const defaultConfig: Required<CookieConsentConfig> = {
+const defaultConfig: ResolvedConsentConfig = {
   banner: {
     title:
       "We use cookies on our site to enhance your user experience, provide personalized content, and analyze our traffic.",
@@ -153,6 +194,7 @@ const defaultConfig: Required<CookieConsentConfig> = {
   linkColor: "#6ac3ff",
   buttonBackgroundColor: "#0073e6",
   textColor: "#000",
+  buttonTextColor: undefined,
   colorScheme: "light",
   zIndex: 99999,
 
@@ -255,7 +297,7 @@ const useFocusTrap = (
 };
 
 const Banner: React.FC<{
-  mergedConfig: Required<CookieConsentConfig>;
+  mergedConfig: ResolvedConsentConfig;
   handleSavePreferences: (prefType: PreferenceType) => void;
   setShowPreferences: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ mergedConfig, handleSavePreferences, setShowPreferences }) => {
@@ -319,7 +361,7 @@ const Banner: React.FC<{
 };
 
 const CookieModal: React.FC<{
-  mergedConfig: Required<CookieConsentConfig>;
+  mergedConfig: ResolvedConsentConfig;
   togglePreference: (key: string) => void;
   handleSavePreferences: (prefType?: PreferenceType) => void;
   handleClose: () => void;
@@ -421,12 +463,18 @@ export function CookieConsent({ GA_TRACKING_ID, config }: Props) {
     root.style.setProperty("--cookie-consent-link-color", mergedConfig.linkColor);
     root.style.setProperty("--cookie-consent-button-background-color", mergedConfig.buttonBackgroundColor);
     root.style.setProperty("--cookie-consent-text-color", mergedConfig.textColor);
+    root.style.setProperty(
+      "--cookie-consent-button-text-color",
+      mergedConfig.buttonTextColor ??
+        readableTextOn(mergedConfig.buttonBackgroundColor)
+    );
     root.setAttribute("data-ccb-scheme", mergedConfig.colorScheme ?? "light");
   }, [
     mergedConfig.backgroundColor,
     mergedConfig.linkColor,
     mergedConfig.buttonBackgroundColor,
     mergedConfig.textColor,
+    mergedConfig.buttonTextColor,
     mergedConfig.colorScheme,
   ]);
 
@@ -612,6 +660,7 @@ export type {
   IMoreLinks,
   CookieConsentConfig,
   DeepPartialConfig,
+  ResolvedConsentConfig,
   Props,
   IGetGtagAdsPropsDefault,
   IGetGtagAdsPropsNonDefault,

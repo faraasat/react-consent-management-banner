@@ -257,3 +257,45 @@ describe("configuration", () => {
     expect(document.querySelector("script[src*='googletagmanager']")).toBeNull();
   });
 });
+
+describe("button contrast", () => {
+  const buttonTextVar = () =>
+    document.documentElement.style.getPropertyValue(
+      "--cookie-consent-button-text-color"
+    );
+
+  it("uses white text on the dark default accent", async () => {
+    render(<CookieConsent GA_TRACKING_ID={GA} />);
+    await screen.findByText(/Accept All/i);
+    expect(buttonTextVar()).toBe("#ffffff");
+  });
+
+  // A configurable accent with hardcoded white text left any light accent
+  // below the WCAG AA 4.5:1 minimum, with no way to correct it.
+  it("switches to black text on a light accent", async () => {
+    render(
+      <CookieConsent GA_TRACKING_ID={GA} config={{ buttonBackgroundColor: "#6aa9ff" }} />
+    );
+    await screen.findByText(/Accept All/i);
+    expect(buttonTextVar()).toBe("#000000");
+  });
+
+  it("honours an explicit buttonTextColor", async () => {
+    render(
+      <CookieConsent
+        GA_TRACKING_ID={GA}
+        config={{ buttonBackgroundColor: "#6aa9ff", buttonTextColor: "#123456" }}
+      />
+    );
+    await screen.findByText(/Accept All/i);
+    expect(buttonTextVar()).toBe("#123456");
+  });
+
+  it("falls back to white for an unparseable accent", async () => {
+    render(
+      <CookieConsent GA_TRACKING_ID={GA} config={{ buttonBackgroundColor: "rebeccapurple" }} />
+    );
+    await screen.findByText(/Accept All/i);
+    expect(buttonTextVar()).toBe("#ffffff");
+  });
+});

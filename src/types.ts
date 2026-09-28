@@ -83,6 +83,14 @@ export type CookieConsentConfig = {
   linkColor: string;
   buttonBackgroundColor: string;
   textColor: string;
+  /**
+   * Text colour for primary buttons.
+   *
+   * Leave unset and it is chosen automatically — black or white, whichever
+   * contrasts better with `buttonBackgroundColor`. Without that, picking a
+   * light accent left white-on-light buttons that fail WCAG AA.
+   */
+  buttonTextColor?: string;
   /** `"auto"` follows `prefers-color-scheme`. Default `"light"` for back-compat. */
   colorScheme?: "auto" | "light" | "dark";
   /** Stacking order for the banner and modal. Default `99999`. */
@@ -166,3 +174,14 @@ declare global {
 }
 
 export type PreferenceType = "all" | "essential";
+
+/**
+ * The config after defaults have been applied.
+ *
+ * `buttonTextColor` stays optional: leaving it unset is meaningful, and is
+ * what triggers the automatic contrast choice.
+ */
+export type ResolvedConsentConfig = Required<
+  Omit<CookieConsentConfig, "buttonTextColor">
+> &
+  Pick<CookieConsentConfig, "buttonTextColor">;
