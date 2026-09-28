@@ -294,9 +294,19 @@ Issues and pull requests are welcome.
 git clone https://github.com/faraasat/react-consent-management-banner.git
 cd react-consent-management-banner
 npm install
-npm test          # vitest
+npm test          # vitest unit tests
 npm run typecheck # tsc --noEmit
 npm run build     # tsup
+```
+
+End-to-end tests run against the built demo in a real browser (desktop and
+mobile viewports), and cover the things unit tests cannot: layout, CSS and
+keyboard behaviour.
+
+```bash
+npm run build && npm --prefix example install && npm --prefix example run build
+npm run test:e2e      # playwright
+npm run test:e2e:ui   # interactive
 ```
 
 To run the demo site against your local build:
