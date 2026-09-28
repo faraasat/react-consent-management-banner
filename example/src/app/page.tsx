@@ -148,7 +148,7 @@ export default function Home() {
           <code>expiryDays</code> to refresh consent periodically. A stored
           choice failing either check is treated as absent.
         </p>
-        <pre>{`<CookieConsent
+        <pre tabIndex={0}>{`<CookieConsent
   GA_TRACKING_ID="G-XXXXXXXXXX"
   config={{ version: 2, expiryDays: 365 }}
 />`}</pre>
@@ -156,7 +156,7 @@ export default function Home() {
 
       <section className="card">
         <h2>Usage</h2>
-        <pre>{`import { CookieConsent } from "react-consent-management-banner";
+        <pre tabIndex={0}>{`import { CookieConsent } from "react-consent-management-banner";
 import "react-consent-management-banner/style.css";
 
 <CookieConsent

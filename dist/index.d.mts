@@ -72,6 +72,14 @@ type CookieConsentConfig = {
     linkColor: string;
     buttonBackgroundColor: string;
     textColor: string;
+    /**
+     * Text colour for primary buttons.
+     *
+     * Leave unset and it is chosen automatically — black or white, whichever
+     * contrasts better with `buttonBackgroundColor`. Without that, picking a
+     * light accent left white-on-light buttons that fail WCAG AA.
+     */
+    buttonTextColor?: string;
     /** `"auto"` follows `prefers-color-scheme`. Default `"light"` for back-compat. */
     colorScheme?: "auto" | "light" | "dark";
     /** Stacking order for the banner and modal. Default `99999`. */
@@ -134,7 +142,14 @@ declare global {
     }
 }
 type PreferenceType = "all" | "essential";
+/**
+ * The config after defaults have been applied.
+ *
+ * `buttonTextColor` stays optional: leaving it unset is meaningful, and is
+ * what triggers the automatic contrast choice.
+ */
+type ResolvedConsentConfig = Required<Omit<CookieConsentConfig, "buttonTextColor">> & Pick<CookieConsentConfig, "buttonTextColor">;
 
 declare function CookieConsent({ GA_TRACKING_ID, config }: Props): React.JSX.Element;
 
-export { type BannerLayout, type BannerPosition, type ConsentStorage, CookieConsent, type CookieConsentConfig, type DeepPartialConfig, type GetGtagAdsPropsT, type IGetGtagAdsPropsDefault, type IGetGtagAdsPropsNonDefault, type IMoreLinks, type IPreferenceOption, type PreferenceType, type Props, type StoredConsent };
+export { type BannerLayout, type BannerPosition, type ConsentStorage, CookieConsent, type CookieConsentConfig, type DeepPartialConfig, type GetGtagAdsPropsT, type IGetGtagAdsPropsDefault, type IGetGtagAdsPropsNonDefault, type IMoreLinks, type IPreferenceOption, type PreferenceType, type Props, type ResolvedConsentConfig, type StoredConsent };

@@ -254,6 +254,22 @@ Or via config:
 />
 ```
 
+### Button text is chosen for you
+
+Button text defaults to white, and automatically flips to black when white
+would fall below the WCAG AA contrast minimum of 4.5:1 against your accent —
+so a light `buttonBackgroundColor` cannot silently produce unreadable buttons.
+
+Override it explicitly when you want to:
+
+```tsx
+config={{ buttonBackgroundColor: "#6aa9ff", buttonTextColor: "#04101f" }}
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `buttonTextColor` | `string` | auto | Text on primary buttons. Unset means "pick whichever of black/white meets AA". |
+
 ## Accessibility
 
 - The banner is a labelled `role="region"`, so screen-reader users can find it.

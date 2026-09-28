@@ -11,6 +11,7 @@
   --cookie-consent-text-color: #000;
   --cookie-consent-link-color: #6ac3ff;
   --cookie-consent-button-background-color: #0073e6;
+  --cookie-consent-button-text-color: #fff;
 }
 
 .ccb-wrapper,
@@ -20,7 +21,7 @@
   --ccb-fg: var(--cookie-consent-text-color, #000);
   --ccb-link: var(--cookie-consent-link-color, #6ac3ff);
   --ccb-accent: var(--cookie-consent-button-background-color, #0073e6);
-  --ccb-accent-fg: #fff;
+  --ccb-accent-fg: var(--cookie-consent-button-text-color, #fff);
   --ccb-border: rgba(0, 0, 0, 0.12);
   --ccb-muted: color-mix(in srgb, var(--ccb-fg) 65%, transparent);
   --ccb-surface: color-mix(in srgb, var(--ccb-fg) 5%, var(--ccb-bg));
