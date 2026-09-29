@@ -24,6 +24,60 @@
 
 ---
 
+## Upgrading from 1.x
+
+`2.0.0` rewrites the banner and modal for accessibility, responsiveness and
+theming. `<CookieConsent GA_TRACKING_ID=… />` keeps its signature, and stored
+consent from 1.x is still honoured — visitors are not re-prompted on upgrade.
+Three things will affect you.
+
+### Custom CSS needs remapping
+
+Every class was renamed:
+
+| 1.x | 2.0 |
+| --- | --- |
+| `.cookie-banner-wrapper` | `.ccb-wrapper` |
+| `.cookie-banner` | `.ccb-banner` |
+| `.cookie-buttons` | `.ccb-banner__actions` |
+| `.btn-outline` | `.ccb-btn--ghost` |
+| `.cookie-modal` | `.ccb-modal` |
+| `.cookie-modal-content` | `.ccb-modal__panel` |
+| `.cookie-modal__btn` | `.ccb-modal__actions` |
+| `.cookie-modal__close` | `.ccb-modal__close` |
+| `.cookie-settings-button` | `.ccb-fab` |
+| `.top` / `.bottom` | `.ccb-wrapper--top` / `.ccb-wrapper--bottom` |
+| `.top-left` … `.bottom-right` | `.ccb-fab--top-left` … `.ccb-fab--bottom-right` |
+
+The four `--cookie-consent-*` custom properties are unchanged, so themes built
+on those keep working.
+
+### Button text colour is chosen automatically
+
+Button text stays white unless white fails the WCAG AA contrast minimum
+against your `buttonBackgroundColor`, in which case it switches to black. If
+you relied on white text over a light accent, set it explicitly:
+
+```tsx
+config={{ buttonBackgroundColor: "#6aa9ff", buttonTextColor: "#ffffff" }}
+```
+
+### Only real Consent Mode keys reach gtag
+
+Custom categories are no longer forwarded to `gtag("consent", …)` — previously
+any option key was passed through as a consent signal, including ones Google
+does not recognise. Act on your own categories via `onPreferencesChange`.
+
+### New, optional
+
+- `version` and `expiryDays` re-ask for consent when your categories change or
+  a choice goes stale. Both default to the previous behaviour for existing
+  stored consent.
+- `storage` accepts a cookie-backed implementation, for consent shared across
+  subdomains.
+- `GA_TRACKING_ID={null}` sets Consent Mode without injecting gtag, for hosts
+  that manage it themselves.
+
 ## Why
 
 Most consent banners either look like a default Bootstrap alert or cost a
