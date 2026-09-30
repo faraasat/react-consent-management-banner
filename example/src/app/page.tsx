@@ -5,6 +5,7 @@ import { CookieConsent } from "react-consent-management-banner";
 import type { BannerLayout, BannerPosition } from "react-consent-management-banner";
 import { Hero } from "@/components/hero";
 import { Footer } from "@/components/footer";
+import { Code } from "@/components/code";
 import { track } from "@/components/analytics";
 
 // No placeholder fallback: a bogus id would silently send the demo's consent
@@ -150,15 +151,15 @@ export default function Home() {
           <code>expiryDays</code> to refresh consent periodically. A stored
           choice failing either check is treated as absent.
         </p>
-        <pre tabIndex={0}>{`<CookieConsent
+        <Code language="tsx">{`<CookieConsent
   GA_TRACKING_ID="G-XXXXXXXXXX"
   config={{ version: 2, expiryDays: 365 }}
-/>`}</pre>
+/>`}</Code>
       </section>
 
       <section className="card">
         <h2>Usage</h2>
-        <pre tabIndex={0}>{`import { CookieConsent } from "react-consent-management-banner";
+        <Code language="tsx">{`import { CookieConsent } from "react-consent-management-banner";
 import "react-consent-management-banner/style.css";
 
 <CookieConsent
@@ -167,7 +168,7 @@ import "react-consent-management-banner/style.css";
     banner: { layout: "card", position: "bottom-right" },
     onPreferencesChange: (prefs, given) => console.log(prefs, given),
   }}
-/>`}</pre>
+/>`}</Code>
       </section>
 
       <Footer />
