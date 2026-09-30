@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/faraasat/react-consent-management-banner/compare/v1.1.19...v2.0.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* notes from BREAKING CHANGE commit footers which none of these
+commits carry — so the generated changelog would ship a major with no
+migration guidance at all.
+
+The largest break is invisible from the API: the stylesheets were rewritten,
+so almost every published class name is gone. Anyone with custom CSS would
+find it silently stop applying. Each guide gives the old -> new mapping.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+### Features
+
+* consent versioning/expiry, accessible modal, responsive layouts ([542eaf6](https://github.com/faraasat/react-consent-management-banner/commit/542eaf68fc84f220e969556b96b1681774daf603))
+
+
+### Bug Fixes
+
+* do not load Google Analytics before consent is given ([3b3254a](https://github.com/faraasat/react-consent-management-banner/commit/3b3254a92ad8e099215a2e6f60b4f9420ee91ab6))
+* keep button text readable on any accent, plus a11y audit ([0459eb3](https://github.com/faraasat/react-consent-management-banner/commit/0459eb3fe0f1f705df488e05ad3ea6f36856dd71)), closes [#6aa9](https://github.com/faraasat/react-consent-management-banner/issues/6aa9)
+
+
+* document the 1.x -> 2.0 breaking changes ([6dde7b1](https://github.com/faraasat/react-consent-management-banner/commit/6dde7b16de22a1fb2e1f6e8963a239a9490caca8))
+
 ### 1.1.19 (2025-07-20)
 
 ### 1.1.18 (2025-07-20)
