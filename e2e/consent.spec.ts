@@ -83,10 +83,17 @@ test("accepting all grants every category and persists it", async ({ page }) => 
 test("consent mode goes denied-by-default then updates", async ({ page }) => {
   await page.goto("/");
 
-  const before = await page.evaluate(() =>
-    (window.dataLayer || []).filter((a: IArguments) => a[0] === "consent").map((a: IArguments) => a[1])
-  );
-  expect(before).toContain("default");
+  // Polled rather than read once: the default consent state is set during
+  // hydration, so a single immediate read races page load.
+  await expect
+    .poll(async () =>
+      page.evaluate(() =>
+        (window.dataLayer || [])
+          .filter((a: IArguments) => a[0] === "consent")
+          .map((a: IArguments) => a[1])
+      )
+    )
+    .toContain("default");
 
   await page.getByRole("button", { name: "Accept All" }).click();
 
